@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Search, Globe, Shield, Activity, List, Server, TriangleAlert, CheckCircle, Clock, MapPin, Lock, FileText, Share2, Info, ChevronDown, ChevronUp, AlertCircle, Wifi, Mail, Link2, Cookie, ExternalLink } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 
-const API_BASE = 'http://localhost:5000/api/web_analyzer'
+const API_BASE = 'http://localhost:5001/api/web-analyzer'
 
 // API endpoint configuration
 const API_ENDPOINTS = [
@@ -253,16 +253,28 @@ export default function WebAnalysisPage() {
                     <div className="p-5 rounded-xl bg-[#0a0e17] border border-white/10">
                         <CardHeader title="Domain WHOIS" icon={FileText} status={getStatus('whois')} />
                         {getData('whois') ? (
-                            <div className="space-y-1">
-                                <InfoRow label="Registrar" value={getData('whois').registrar} />
-                                <InfoRow label="Created" value={getData('whois').creationDate} />
-                                <InfoRow label="Updated" value={getData('whois').updatedDate} />
-                                <InfoRow label="Expires" value={getData('whois').expiryDate} />
-                                <div className="my-2 h-px bg-white/10" />
-                                <div className="text-xs font-mono text-foreground/40 break-all">
-                                    Registrant: {getData('whois').registrantOrg || getData('whois').registrant || '-'}
+                            getData('whois').whois_data?.error ? (
+                                <div className="space-y-2">
+                                    <InfoRow label="Domain" value={getData('whois').domain} />
+                                    <InfoRow label="Source" value={getData('whois').source} />
+                                    <div className="mt-3 p-3 rounded bg-yellow-500/10 border border-yellow-500/20 text-center">
+                                        <div className="text-yellow-500 font-bold text-sm">{getData('whois').whois_data.error}</div>
+                                    </div>
                                 </div>
-                            </div>
+                            ) : (
+                                <div className="space-y-1">
+                                    <InfoRow label="Domain" value={getData('whois').domain} />
+                                    <InfoRow label="Source" value={getData('whois').source} />
+                                    <InfoRow label="Registrar" value={getData('whois').whois_data?.registrar || getData('whois').registrar} />
+                                    <InfoRow label="Created" value={getData('whois').whois_data?.creationDate || getData('whois').creationDate} />
+                                    <InfoRow label="Updated" value={getData('whois').whois_data?.updatedDate || getData('whois').updatedDate} />
+                                    <InfoRow label="Expires" value={getData('whois').whois_data?.expiryDate || getData('whois').expiryDate} />
+                                    <div className="my-2 h-px bg-white/10" />
+                                    <div className="text-xs font-mono text-foreground/40 break-all">
+                                        Registrant: {getData('whois').whois_data?.registrantOrg || getData('whois').whois_data?.registrant || getData('whois').registrantOrg || getData('whois').registrant || '-'}
+                                    </div>
+                                </div>
+                            )
                         ) : (
                             <div className="text-foreground/40 text-sm">Loading...</div>
                         )}
@@ -417,13 +429,22 @@ export default function WebAnalysisPage() {
                     <div className="p-5 rounded-xl bg-[#0a0e17] border border-white/10">
                         <CardHeader title="Social Tags" status={getStatus('socialTags')} />
                         {getData('socialTags') ? (
-                            <div className="space-y-1">
-                                <InfoRow label="Title" value={getData('socialTags').title} />
-                                <InfoRow label="OG Title" value={getData('socialTags').ogTitle} />
+                            <div className="space-y-2">
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-foreground/70 font-bold text-sm">Title</span>
+                                    <span className="text-white text-sm break-words">{getData('socialTags').title || '-'}</span>
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-foreground/70 font-bold text-sm">OG Title</span>
+                                    <span className="text-white text-sm break-words">{getData('socialTags').ogTitle || '-'}</span>
+                                </div>
                                 <InfoRow label="OG Site" value={getData('socialTags').ogSiteName} />
                                 <div className="my-2 h-px bg-white/10" />
-                                <div className="text-xs text-foreground/50 line-clamp-2">
-                                    {getData('socialTags').description}
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-foreground/70 font-bold text-sm">Description</span>
+                                    <span className="text-foreground/50 text-xs break-words whitespace-pre-wrap">
+                                        {getData('socialTags').description || 'No description'}
+                                    </span>
                                 </div>
                             </div>
                         ) : (
@@ -435,14 +456,14 @@ export default function WebAnalysisPage() {
                     <div className="p-5 rounded-xl bg-[#0a0e17] border border-white/10">
                         <CardHeader title="Firewall Detection" icon={Shield} status={getStatus('firewall')} />
                         {getData('firewall') ? (
-                            <div className="space-y-1">
+                            <div className="space-y-2">
                                 <InfoRow label="WAF Detected" value={getData('firewall').hasWaf ? 'Yes' : 'No'} />
                                 {getData('firewall').waf && (
                                     <InfoRow label="WAF Provider" value={getData('firewall').waf} />
                                 )}
-                                <div className={`mt-4 p-3 rounded text-center ${getData('firewall').hasWaf ? 'bg-green-500/10 border border-green-500/20' : 'bg-yellow-500/10 border border-yellow-500/20'}`}>
-                                    <div className={`font-bold text-sm ${getData('firewall').hasWaf ? 'text-green-500' : 'text-yellow-500'}`}>
-                                        {getData('firewall').message}
+                                <div className={`mt-4 p-3 rounded text-center ${getData('firewall').hasWaf ? 'bg-neon-green/10 border border-neon-green/30' : 'bg-red-500/10 border border-red-500/20'}`}>
+                                    <div className={`font-bold text-sm ${getData('firewall').hasWaf ? 'text-neon-green' : 'text-red-400'}`}>
+                                        {getData('firewall').hasWaf ? `Protected by ${getData('firewall').waf}` : (getData('firewall').message || 'No WAF detected')}
                                     </div>
                                 </div>
                             </div>
