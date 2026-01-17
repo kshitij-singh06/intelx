@@ -4,7 +4,7 @@ import { Check, Github, Rocket, Code } from 'lucide-react'
 
 const features = [
     // Column 1
-    ['Archive History', 'Block List Check', 'Carbon Footprint', 'Cookies', 'DNS Server', 'DNS Records'],
+    ['Archive History', 'Block List Check', 'Carbon Footprint', 'Cookies', 'DNS Server', 'DNS Records','Reverse Engineering'],
     // Column 2
     ['DNSSEC', 'Site Features', 'Firewall Types', 'Get IP Address', 'Headers', 'HSTS', 'HTTP Security'],
     // Column 3
