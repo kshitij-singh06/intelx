@@ -1,5 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { Globe, Bug, Radar, ArrowRight } from 'lucide-react'
 
 const tools = [
@@ -20,6 +21,7 @@ const tools = [
         ],
         gradient: 'from-neon-green/20 via-neon-green/5 to-transparent',
         accent: 'neon-green',
+        link: '/dashboard/web'
     },
     {
         icon: Bug,
@@ -36,6 +38,7 @@ const tools = [
         ],
         gradient: 'from-red-500/20 via-red-500/5 to-transparent',
         accent: 'red-400',
+        link: '/dashboard/malware'
     },
     {
         icon: Radar,
@@ -51,6 +54,7 @@ const tools = [
         ],
         gradient: 'from-neon-yellow/20 via-neon-yellow/5 to-transparent',
         accent: 'neon-yellow',
+        link: '/dashboard/recon'
     },
 ]
 
@@ -79,7 +83,7 @@ export function ToolsOverviewSection() {
     }
 
     return (
-        <section ref={ref} className="py-28 px-4 relative overflow-hidden">
+        <section id="tools" ref={ref} className="py-28 px-4 relative overflow-hidden">
             {/* Background elements */}
             <div className="absolute inset-0 bg-gradient-to-b from-background via-[#0d1235] to-background" />
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-neon-green/50 to-transparent" />
@@ -198,14 +202,16 @@ export function ToolsOverviewSection() {
                                     </div>
 
                                     {/* CTA */}
-                                    <motion.button
-                                        className={`mt-auto flex items-center gap-2 text-${tool.accent} font-mono text-sm group/btn`}
-                                        style={{ color: index === 1 ? '#f87171' : undefined }}
-                                        whileHover={{ x: 4 }}
-                                    >
-                                        Learn More
-                                        <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
-                                    </motion.button>
+                                    <Link to={tool.link}>
+                                        <motion.button
+                                            className={`mt-auto flex items-center gap-2 text-${tool.accent} font-mono text-sm group/btn`}
+                                            style={{ color: index === 1 ? '#f87171' : undefined }}
+                                            whileHover={{ x: 4 }}
+                                        >
+                                            Launch Tool
+                                            <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
+                                        </motion.button>
+                                    </Link>
                                 </div>
 
                                 {/* Animated border */}

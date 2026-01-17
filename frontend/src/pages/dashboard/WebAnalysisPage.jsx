@@ -115,7 +115,7 @@ export default function WebAnalysisPage() {
                 <div className="flex items-center gap-4 flex-1">
                     <Globe className="text-neon-green" size={32} />
                     <div>
-                        <h1 className="text-2xl font-bold text-white leading-none">Web Check</h1>
+                        <h1 className="text-2xl font-bold text-white leading-none">Web Analysis</h1>
                         <div className="text-xs text-foreground/40 font-mono mt-1">ADVANCED INTELLIGENCE SCANNER</div>
                     </div>
                 </div>
@@ -249,9 +249,9 @@ export default function WebAnalysisPage() {
 
             {/* Empty State */}
             {!loading && !results && (
-                <div className="h-[60vh] flex flex-col items-center justify-center text-foreground/20">
-                    <Activity size={64} strokeWidth={1} className="mb-4" />
-                    <p>Enter a URL to begin comprehensive deep scan</p>
+                <div className="h-[60vh] flex flex-col items-center justify-center text-foreground/40">
+                    <Activity size={64} strokeWidth={1} className="mb-4 text-neon-green/20" />
+                    <p className="font-mono tracking-wider">ENTER URL TO INITIALIZE SCANNER</p>
                 </div>
             )}
         </div>

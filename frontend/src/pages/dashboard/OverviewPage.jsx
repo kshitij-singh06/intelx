@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Globe, Bug, Radar, Clock, Search, ArrowRight, Activity } from 'lucide-react'
+import { Globe, Bug, Radar, Search, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '../../components/ui/Button'
 
@@ -21,26 +21,7 @@ const QuickActionCard = ({ title, description, icon: Icon, to, color }) => (
     </Link>
 )
 
-const RecentScanRow = ({ target, type, status, time }) => (
-    <div className="flex items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors cursor-pointer group">
-        <div className="flex items-center gap-4">
-            <div className={`p-2 rounded-lg ${type === 'Web' ? 'bg-neon-green/10 text-neon-green' : type === 'Malware' ? 'bg-red-500/10 text-red-500' : 'bg-neon-yellow/10 text-neon-yellow'}`}>
-                {type === 'Web' ? <Globe size={16} /> : type === 'Malware' ? <Bug size={16} /> : <Radar size={16} />}
-            </div>
-            <div>
-                <div className="text-sm font-mono text-white group-hover:text-neon-green transition-colors">{target}</div>
-                <div className="text-xs text-foreground/40">{type} Analysis</div>
-            </div>
-        </div>
-        <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2">
-                <div className={`w-2 h-2 rounded-full ${status === 'Completed' ? 'bg-neon-green' : 'bg-neon-yellow animate-pulse'}`} />
-                <span className="text-xs text-foreground/60">{status}</span>
-            </div>
-            <div className="text-xs text-foreground/40 font-mono w-24 text-right">{time}</div>
-        </div>
-    </div>
-)
+
 
 export default function OverviewPage() {
     return (
@@ -94,28 +75,11 @@ export default function OverviewPage() {
                 />
                 <QuickActionCard
                     title="Recon Analysis"
-                    description="OSINT gathering for usernames, emails, and exposed data."
+                    description="OSINT gathering for users, emails, and exposed data."
                     icon={Radar}
                     to="/dashboard/recon"
                     color="neon-yellow"
                 />
-            </div>
-
-            {/* Recent Activity */}
-            <div className="rounded-2xl border border-white/10 bg-black/20 backdrop-blur-sm overflow-hidden">
-                <div className="p-6 border-b border-white/10 flex items-center justify-between">
-                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                        <Activity size={18} className="text-neon-green" />
-                        Recent Investigations
-                    </h3>
-                    <Button variant="outline" className="text-xs h-8">View All History</Button>
-                </div>
-                <div className="p-2 space-y-1">
-                    <RecentScanRow target="example.com" type="Web" status="Completed" time="2m ago" />
-                    <RecentScanRow target="192.168.1.105" type="Web" status="Scanning" time="Running..." />
-                    <RecentScanRow target="malicious_payload.exe" type="Malware" status="Completed" time="1h ago" />
-                    <RecentScanRow target="john.doe@corp.net" type="Recon" status="Completed" time="3h ago" />
-                </div>
             </div>
         </div>
     )

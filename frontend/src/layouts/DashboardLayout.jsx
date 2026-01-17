@@ -116,15 +116,7 @@ export default function DashboardLayout() {
                     </div>
 
                     <div className="flex items-center gap-4">
-                        {/* Context Search */}
-                        <div className="hidden md:flex items-center px-3 py-1.5 rounded-full bg-foreground/5 border border-foreground/10 focus-within:border-neon-green/50 transition-colors w-64">
-                            <Search size={14} className="text-foreground/40 mr-2" />
-                            <input
-                                type="text"
-                                placeholder={`Search ${getPageTitle().toLowerCase()}...`}
-                                className="bg-transparent border-none outline-none text-sm text-foreground/80 placeholder:text-foreground/30 w-full font-mono"
-                            />
-                        </div>
+                        {/* Search Removed */}
                     </div>
                 </header>
 

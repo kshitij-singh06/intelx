@@ -53,7 +53,7 @@ export function FeaturesHighlightSection() {
                 {/* Header */}
                 <motion.div className="text-center mb-12" variants={itemVariants}>
                     <p className="text-lg md:text-xl text-foreground/80">
-                        With over <span className="text-neon-green font-bold">30 supported checks</span> you can view and analyse key website
+                        With over <span className="text-neon-green font-bold">30 supported checks</span> you can view and analyse key
                     </p>
                     <p className="text-lg md:text-xl text-foreground/80">
                         information in an instant

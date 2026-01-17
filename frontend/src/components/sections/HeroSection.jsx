@@ -104,9 +104,9 @@ export function HeroSection() {
     }
 
     const offerings = [
-        { icon: Zap, label: 'Web Analysis', desc: 'Deep website intelligence' },
-        { icon: Shield, label: 'Malware Analysis', desc: 'Forensic file inspection' },
-        { icon: Search, label: 'Recon Analysis', desc: 'Digital footprint tracking' },
+        { icon: Zap, label: 'Web Analysis', desc: 'Deep website intelligence', link: '/dashboard/web' },
+        { icon: Shield, label: 'Malware Analysis', desc: 'Forensic file inspection', link: '/dashboard/malware' },
+        { icon: Search, label: 'Recon Analysis', desc: 'Digital footprint tracking', link: '/dashboard/recon' },
     ]
 
     return (
@@ -205,29 +205,30 @@ export function HeroSection() {
                             </h3>
                             <div className="space-y-4">
                                 {offerings.map((item, index) => (
-                                    <motion.div
-                                        key={index}
-                                        className="flex items-center gap-4 p-3 rounded-xl bg-background/30 border border-transparent hover:border-neon-green/30 transition-all group"
-                                        whileHover={{ x: 8, backgroundColor: 'rgba(0, 255, 0, 0.05)' }}
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.8 + index * 0.1 }}
-                                    >
-                                        <span className="text-neon-yellow p-2 rounded-lg bg-neon-yellow/10 group-hover:bg-neon-yellow/20 transition-colors">
-                                            <item.icon size={22} />
-                                        </span>
-                                        <div className="text-left">
-                                            <span className="font-mono text-base text-foreground block">{item.label}</span>
-                                            <span className="text-xs text-foreground/50">{item.desc}</span>
-                                        </div>
-                                        <motion.span
-                                            className="ml-auto text-neon-green opacity-0 group-hover:opacity-100 transition-opacity"
-                                            initial={{ x: -10 }}
-                                            whileHover={{ x: 0 }}
+                                    <Link key={index} to={item.link}>
+                                        <motion.div
+                                            className="flex items-center gap-4 p-3 rounded-xl bg-background/30 border border-transparent hover:border-neon-green/30 transition-all group mb-4 last:mb-0"
+                                            whileHover={{ x: 8, backgroundColor: 'rgba(0, 255, 0, 0.05)' }}
+                                            initial={{ opacity: 0, x: -20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: 0.8 + index * 0.1 }}
                                         >
-                                            →
-                                        </motion.span>
-                                    </motion.div>
+                                            <span className="text-neon-yellow p-2 rounded-lg bg-neon-yellow/10 group-hover:bg-neon-yellow/20 transition-colors">
+                                                <item.icon size={22} />
+                                            </span>
+                                            <div className="text-left">
+                                                <span className="font-mono text-base text-foreground block">{item.label}</span>
+                                                <span className="text-xs text-foreground/50">{item.desc}</span>
+                                            </div>
+                                            <motion.span
+                                                className="ml-auto text-neon-green opacity-0 group-hover:opacity-100 transition-opacity"
+                                                initial={{ x: -10 }}
+                                                whileHover={{ x: 0 }}
+                                            >
+                                                →
+                                            </motion.span>
+                                        </motion.div>
+                                    </Link>
                                 ))}
                             </div>
                         </div>
@@ -250,25 +251,16 @@ export function HeroSection() {
                         whileHover={{ scale: 1.05, y: -2 }}
                         whileTap={{ scale: 0.95 }}
                     >
-                        <Button variant="outline" className="text-base px-10 py-5">
+                        <Button
+                            variant="outline"
+                            className="text-base px-10 py-5"
+                            onClick={() => {
+                                document.getElementById('tools')?.scrollIntoView({ behavior: 'smooth' })
+                            }}
+                        >
                             Explore Tools
                         </Button>
                     </motion.div>
-                </motion.div>
-
-                {/* Scroll indicator */}
-                <motion.div
-                    className="absolute bottom-8 left-1/2 -translate-x-1/2"
-                    animate={{ y: [0, 10, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                >
-                    <div className="w-6 h-10 border-2 border-neon-green/50 rounded-full flex items-start justify-center p-2">
-                        <motion.div
-                            className="w-1.5 h-1.5 bg-neon-green rounded-full"
-                            animate={{ y: [0, 12, 0] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                        />
-                    </div>
                 </motion.div>
             </motion.div>
         </section>

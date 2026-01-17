@@ -15,7 +15,7 @@ export default function LandingPage() {
             <OpenSourceSection />
             <CTASection />
             <footer className="py-8 text-center text-foreground/40 text-sm border-t border-foreground/10 bg-[#05070a]">
-                <p>© 2024 IntelX Platform. All rights reserved.</p>
+                <p>© 2026 IntelX Platform. All rights reserved.</p>
             </footer>
         </>
     )
