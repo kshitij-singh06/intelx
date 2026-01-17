@@ -15,6 +15,6 @@ if __name__ == '__main__':
     debug = os.getenv('FLASK_ENV', 'production') == 'development'
     
     print(f"Starting Web-Analyzer on port {port}...")
-    print(f"API available at http://localhost:{port}/api")
+    print(f"API available at http://localhost:{port}/api/web-analyzer")
     
     app.run(host='0.0.0.0', port=port, debug=debug, threaded=True)

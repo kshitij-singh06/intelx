@@ -40,7 +40,7 @@ from app.services import (
 
 logger = logging.getLogger(__name__)
 
-bp = Blueprint('api', __name__, url_prefix='/api')
+bp = Blueprint('api', __name__, url_prefix='/api/web-analyzer')
 
 
 def get_url_param():
@@ -325,37 +325,37 @@ def screenshot():
 def api_index():
     """API index - list all endpoints"""
     endpoints = {
-        'status': '/api/status?url=example.com',
-        'dns': '/api/dns?url=example.com',
-        'ssl': '/api/ssl?url=example.com',
-        'headers': '/api/headers?url=example.com',
-        'tech-stack': '/api/tech-stack?url=example.com',
-        'whois': '/api/whois?url=example.com',
-        'robots-txt': '/api/robots-txt?url=example.com',
-        'sitemap': '/api/sitemap?url=example.com',
-        'cookies': '/api/cookies?url=example.com',
-        'hsts': '/api/hsts?url=example.com',
-        'security-headers': '/api/security-headers?url=example.com',
-        'security-txt': '/api/security-txt?url=example.com',
-        'redirects': '/api/redirects?url=example.com',
-        'ports': '/api/ports?url=example.com',
-        'get-ip': '/api/get-ip?url=example.com',
-        'social-tags': '/api/social-tags?url=example.com',
-        'txt-records': '/api/txt-records?url=example.com',
-        'linked-pages': '/api/linked-pages?url=example.com',
-        'trace-route': '/api/trace-route?url=example.com',
-        'mail-config': '/api/mail-config?url=example.com',
-        'dnssec': '/api/dnssec?url=example.com',
-        'firewall': '/api/firewall?url=example.com',
-        'dns-server': '/api/dns-server?url=example.com',
-        'tls': '/api/tls?url=example.com',
-        'archives': '/api/archives?url=example.com',
-        'carbon': '/api/carbon?url=example.com',
-        'rank': '/api/rank?url=example.com',
-        'features': '/api/features?url=example.com',
-        'block-lists': '/api/block-lists?url=example.com',
-        'screenshot': '/api/screenshot?url=example.com',
-        'batch': '/api/batch?url=example.com',
+        'status': '/api/web-analyzer/status?url=example.com',
+        'dns': '/api/web-analyzer/dns?url=example.com',
+        'ssl': '/api/web-analyzer/ssl?url=example.com',
+        'headers': '/api/web-analyzer/headers?url=example.com',
+        'tech-stack': '/api/web-analyzer/tech-stack?url=example.com',
+        'whois': '/api/web-analyzer/whois?url=example.com',
+        'robots-txt': '/api/web-analyzer/robots-txt?url=example.com',
+        'sitemap': '/api/web-analyzer/sitemap?url=example.com',
+        'cookies': '/api/web-analyzer/cookies?url=example.com',
+        'hsts': '/api/web-analyzer/hsts?url=example.com',
+        'security-headers': '/api/web-analyzer/security-headers?url=example.com',
+        'security-txt': '/api/web-analyzer/security-txt?url=example.com',
+        'redirects': '/api/web-analyzer/redirects?url=example.com',
+        'ports': '/api/web-analyzer/ports?url=example.com',
+        'get-ip': '/api/web-analyzer/get-ip?url=example.com',
+        'social-tags': '/api/web-analyzer/social-tags?url=example.com',
+        'txt-records': '/api/web-analyzer/txt-records?url=example.com',
+        'linked-pages': '/api/web-analyzer/linked-pages?url=example.com',
+        'trace-route': '/api/web-analyzer/trace-route?url=example.com',
+        'mail-config': '/api/web-analyzer/mail-config?url=example.com',
+        'dnssec': '/api/web-analyzer/dnssec?url=example.com',
+        'firewall': '/api/web-analyzer/firewall?url=example.com',
+        'dns-server': '/api/web-analyzer/dns-server?url=example.com',
+        'tls': '/api/web-analyzer/tls?url=example.com',
+        'archives': '/api/web-analyzer/archives?url=example.com',
+        'carbon': '/api/web-analyzer/carbon?url=example.com',
+        'rank': '/api/web-analyzer/rank?url=example.com',
+        'features': '/api/web-analyzer/features?url=example.com',
+        'block-lists': '/api/web-analyzer/block-lists?url=example.com',
+        'screenshot': '/api/web-analyzer/screenshot?url=example.com',
+        'batch': '/api/web-analyzer/batch?url=example.com',
     }
     
     return jsonify({
