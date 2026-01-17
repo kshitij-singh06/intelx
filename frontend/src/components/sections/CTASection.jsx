@@ -1,5 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { Button } from '../ui/Button'
 import { Rocket, FileText, Zap } from 'lucide-react'
 
@@ -148,22 +149,24 @@ export function CTASection() {
                         whileHover={{ scale: 1.05, y: -4 }}
                         whileTap={{ scale: 0.95 }}
                     >
-                        <Button variant="primary" className="relative overflow-hidden group text-lg px-12 py-6">
-                            {/* Shimmer effect */}
-                            <motion.span
-                                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"
-                            />
-                            {/* Pulse effect */}
-                            <motion.span
-                                className="absolute inset-0 bg-neon-green/30"
-                                animate={{ opacity: [0, 0.5, 0] }}
-                                transition={{ duration: 2, repeat: Infinity }}
-                            />
-                            <span className="relative flex items-center gap-3">
-                                <Rocket size={22} />
-                                Launch IntelX
-                            </span>
-                        </Button>
+                        <Link to="/dashboard">
+                            <Button variant="primary" className="relative overflow-hidden group text-lg px-12 py-6">
+                                {/* Shimmer effect */}
+                                <motion.span
+                                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"
+                                />
+                                {/* Pulse effect */}
+                                <motion.span
+                                    className="absolute inset-0 bg-neon-green/30"
+                                    animate={{ opacity: [0, 0.5, 0] }}
+                                    transition={{ duration: 2, repeat: Infinity }}
+                                />
+                                <span className="relative flex items-center gap-3">
+                                    <Rocket size={22} />
+                                    Launch IntelX
+                                </span>
+                            </Button>
+                        </Link>
                     </motion.div>
 
                     <motion.div

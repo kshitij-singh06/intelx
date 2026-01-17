@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import { Button } from '../ui/Button'
 import { Zap, Shield, Search } from 'lucide-react'
 
@@ -239,9 +240,11 @@ export function HeroSection() {
                         whileHover={{ scale: 1.05, y: -2 }}
                         whileTap={{ scale: 0.95 }}
                     >
-                        <Button variant="primary" className="text-base px-10 py-5 shadow-lg shadow-neon-green/30">
-                            Get Started
-                        </Button>
+                        <Link to="/dashboard">
+                            <Button variant="primary" className="text-base px-10 py-5 shadow-lg shadow-neon-green/30">
+                                Get Started
+                            </Button>
+                        </Link>
                     </motion.div>
                     <motion.div
                         whileHover={{ scale: 1.05, y: -2 }}
