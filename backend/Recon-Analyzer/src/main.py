@@ -28,32 +28,39 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app, supports_credentials=True) 
 
+# API prefix for all routes
+API_PREFIX = '/api/Recon-Analyzer'
+
 IP_REGEX = r'^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
 URL_REGEX = r'^([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$'
 EMAIL_REGEX = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
 PHONE_REGEX = r'^\+?[0-9]\d{1,14}$'
 
 
+@app.route(f'{API_PREFIX}/')
 @app.route('/')
 def home():
     logger.info("Home endpoint accessed")
     return jsonify({
         "message": "Welcome to ReconGraph API",
         "version": "1.0.0",
+        "base_url": "/api/Recon-Analyzer",
         "endpoints": {
-            "/scan": "POST - Scan IP or domain for threat intelligence",
-            "/footprint": "POST - Digital footprint analysis (email, phone, username)",
-            "/health": "GET - Health check endpoint"
+            "/api/Recon-Analyzer/scan": "POST - Scan IP or domain for threat intelligence",
+            "/api/Recon-Analyzer/footprint": "POST - Digital footprint analysis (email, phone, username)",
+            "/api/Recon-Analyzer/health": "GET - Health check endpoint"
         }
     })
 
 
+@app.route(f'{API_PREFIX}/health')
 @app.route('/health')
 def health():
     """Health check endpoint for container orchestration."""
     return jsonify({"status": "healthy"})
 
 
+@app.route(f'{API_PREFIX}/scan', methods=['POST'])
 @app.route('/scan', methods=['POST'])
 def scan():
     """Scan an IP address or domain for threat intelligence."""
@@ -103,6 +110,7 @@ def scan():
     return jsonify(results)
 
 
+@app.route(f'{API_PREFIX}/footprint', methods=['POST'])
 @app.route('/footprint', methods=['POST'])
 def footprint():
     """Analyze digital footprint based on email, phone, or username."""
@@ -147,5 +155,5 @@ def footprint():
 
 
 if __name__ == "__main__":
-    logger.info("Starting ReconGraph server in development mode")
-    app.run(host="0.0.0.0", port=8000, debug=True)
+    logger.info("Starting ReconGraph server in development mode on port 5003")
+    app.run(host="0.0.0.0", port=5003, debug=True)
