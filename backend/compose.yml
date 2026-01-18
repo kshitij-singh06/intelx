@@ -1,8 +1,5 @@
-version: '3.8'
-
 # IntelX Backend - Unified Docker Compose
 # Runs all 5 analyzers with a single command: docker-compose up -d
-
 services:
   # ============================================
   # MALWARE ANALYZER - Port 5001
@@ -63,7 +60,7 @@ services:
       steg-worker:
         condition: service_started
     environment:
-      - DATABASE_URL=postgresql://intelxuser:intelxpass@steg-postgres:5432/intelx
+      - DB_URI=postgresql://intelxuser:intelxpass@steg-postgres:5432/intelx
       - REDIS_URL=redis://steg-redis:6379/0
       - POSTGRES_USER=intelxuser
       - POSTGRES_PASSWORD=intelxpass
@@ -88,7 +85,7 @@ services:
       steg-redis:
         condition: service_started
     environment:
-      - DATABASE_URL=postgresql://intelxuser:intelxpass@steg-postgres:5432/intelx
+      - DB_URI=postgresql://intelxuser:intelxpass@steg-postgres:5432/intelx
       - REDIS_URL=redis://steg-redis:6379/0
       - POSTGRES_USER=intelxuser
       - POSTGRES_PASSWORD=intelxpass
@@ -108,7 +105,7 @@ services:
       steg-postgres:
         condition: service_healthy
     environment:
-      - DATABASE_URL=postgresql://intelxuser:intelxpass@steg-postgres:5432/intelx
+      - DB_URI=postgresql://intelxuser:intelxpass@steg-postgres:5432/intelx
       - POSTGRES_USER=intelxuser
       - POSTGRES_PASSWORD=intelxpass
       - POSTGRES_DB=intelx
@@ -147,7 +144,7 @@ services:
   recon-analyzer:
     build:
       context: ./Recon-Analyzer
-      dockerfile: dockerfile
+      dockerfile: Dockerfile
     container_name: recon-analyzer
     ports:
       - "5003:5000"

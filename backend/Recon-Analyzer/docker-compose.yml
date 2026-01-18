@@ -2,7 +2,7 @@ services:
   recon-analyzer:
     build:
       context: .
-      dockerfile: dockerfile
+      Dockerfile: dockerfile
     container_name: recon-analyzer-api
     ports:
       - "5003:5000"

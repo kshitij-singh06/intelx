@@ -48,7 +48,8 @@ def create_app() -> Flask:
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URI")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["MAX_CONTENT_LENGTH"] = int(os.environ.get("MAX_CONTENT_LENGTH", 1024 * 1024))
-    app.config["REDIS_QUEUE"] = Queue(connection=Redis(host="redis", port=6379))
+    redis_url = os.environ.get("REDIS_URL", "redis://redis:6379/0")
+    app.config["REDIS_QUEUE"] = Queue(connection=Redis.from_url(redis_url))
     db.init_app(app)
 
     bp = Blueprint('api', __name__, url_prefix='/api/steg-analyzer')
