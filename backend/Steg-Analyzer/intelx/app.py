@@ -12,7 +12,16 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
+<<<<<<< Updated upstream
 from flask import Blueprint, Flask, Response, abort, jsonify, request, send_file
+||||||| Stash base
+import sentry_sdk
+from flask import Flask, Response, abort, jsonify, render_template, request, send_file
+=======
+import sentry_sdk
+from flask import Flask, Response, abort, jsonify, render_template, request, send_file
+from flask_cors import CORS
+>>>>>>> Stashed changes
 from redis import Redis
 from rq import Queue
 
@@ -31,6 +40,10 @@ from .models import Image, Submission, UploadLog, cleanup_old_entries, db
 def create_app() -> Flask:
     """Create flask application with routes."""
     app = Flask(__name__)
+    
+    # Enable CORS for all origins
+    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+    
     app.json.sort_keys = False  # type: ignore
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URI")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False

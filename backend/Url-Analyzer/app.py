@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import logging
+import os
 from datetime import datetime
 import time
 from services.redirect_chain_analyzer import RedirectChainAnalyzer
@@ -14,7 +15,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-CORS(app)
+
+# Configure CORS - allow all origins for API access
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 # Initialize services
 redirect_analyzer = RedirectChainAnalyzer()
