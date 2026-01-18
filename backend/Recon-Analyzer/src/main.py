@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True) 
+CORS(app, resources={r"/*": {"origins": "*", "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"], "allow_headers": ["Content-Type", "Authorization", "X-Requested-With"]}})
 
 # API prefix for all routes
 API_PREFIX = '/api/Recon-Analyzer'

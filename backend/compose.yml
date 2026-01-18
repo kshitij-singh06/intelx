@@ -2,7 +2,7 @@
 # Runs all 5 analyzers with a single command: docker-compose up -d
 services:
   # ============================================
-  # MALWARE ANALYZER - Port 5001
+  # MALWARE ANALYZER - Port 5000
   # ============================================
   malware-analyzer:
     build:
@@ -11,12 +11,13 @@ services:
     platform: linux/amd64
     container_name: malware-analyzer
     ports:
-      - "5001:5000"
+      - "5000:5000"
     command: python main.py
+    env_file:
+      - ./.env
     environment:
       - PORT=5000
       - FLASK_DEBUG=false
-      - VIRUSTOTAL_API_KEY=${VIRUSTOTAL_API_KEY}
     volumes:
       - ./Malware-Analyzer:/app
       - malware-uploads:/app/uploads
@@ -191,7 +192,7 @@ services:
       - intelx-network
 
   # ============================================
-  # WEB ANALYZER - Port 5005
+  # WEB ANALYZER - Port 5001
   # ============================================
   web-analyzer:
     build:
@@ -199,7 +200,7 @@ services:
       dockerfile: Dockerfile
     container_name: web-analyzer
     ports:
-      - "5005:5000"
+      - "5001:5000"
     environment:
       - FLASK_ENV=production
       - PORT=5000

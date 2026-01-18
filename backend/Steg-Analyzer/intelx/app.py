@@ -34,7 +34,7 @@ def create_app() -> Flask:
     app = Flask(__name__)
     
     # Enable CORS for all origins
-    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+    CORS(app, resources={r"/*": {"origins": "*", "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"], "allow_headers": ["Content-Type", "Authorization", "X-Requested-With"]}})
     
     app.json.sort_keys = False  # type: ignore
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URI")
