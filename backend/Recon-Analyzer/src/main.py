@@ -155,5 +155,5 @@ def footprint():
 
 
 if __name__ == "__main__":
-    logger.info("Starting ReconGraph server in development mode on port 5003")
-    app.run(host="0.0.0.0", port=5003, debug=True)
+    logger.info("Starting ReconGraph server in development mode on port 5000")
+    app.run(host="0.0.0.0", port=5000, debug=True)
