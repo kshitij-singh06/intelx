@@ -4,6 +4,7 @@ import logging
 from datetime import datetime
 import time
 from services.redirect_chain_analyzer import RedirectChainAnalyzer
+from services.ai_analyzer import AIAnalyzer
 
 # Configure logging
 logging.basicConfig(
@@ -17,6 +18,7 @@ CORS(app)
 
 # Initialize services
 redirect_analyzer = RedirectChainAnalyzer()
+ai_analyzer = AIAnalyzer()
 
 
 @app.route('/health', methods=['GET'])
@@ -49,6 +51,41 @@ def analyze_url():
 
     except Exception as e:
         logger.error(f"Error analyzing URL: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/url-analyzer/ai-analyze', methods=['POST'])
+def ai_analyze_url():
+    """Generate AI-powered summary/report of URL analysis"""
+    try:
+        start_time = time.time()
+        data = request.get_json()
+        url = data.get('url')
+
+        if not url:
+            return jsonify({'error': 'URL is required'}), 400
+
+        logger.info(f"Generating AI analysis for URL: {url}")
+
+        # First, get the URL analysis
+        analysis_result = redirect_analyzer.analyze(url)
+        
+        # Then generate AI report
+        ai_report = ai_analyzer.generate_report(analysis_result)
+        
+        # Combine results
+        result = {
+            'url': url,
+            'timestamp': datetime.now().isoformat(),
+            'analysis': analysis_result,
+            'ai_report': ai_report,
+            'analysis_time_ms': int((time.time() - start_time) * 1000)
+        }
+
+        return jsonify(result), 200
+
+    except Exception as e:
+        logger.error(f"Error in AI analysis: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 
