@@ -12,19 +12,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
-<<<<<<< Updated upstream
+import sentry_sdk
 from flask import Blueprint, Flask, Response, abort, jsonify, request, send_file
-||||||| Stash base
-import sentry_sdk
-from flask import Flask, Response, abort, jsonify, render_template, request, send_file
-=======
-import sentry_sdk
-from flask import Flask, Response, abort, jsonify, render_template, request, send_file
 from flask_cors import CORS
->>>>>>> Stashed changes
 from redis import Redis
 from rq import Queue
-
 
 
 from .config import (
