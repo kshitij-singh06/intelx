@@ -173,10 +173,12 @@ export function CTASection() {
                         whileHover={{ scale: 1.05, y: -4 }}
                         whileTap={{ scale: 0.95 }}
                     >
-                        <Button variant="outline" className="text-lg px-12 py-6 flex items-center gap-3">
-                            <FileText size={22} />
-                            View Documentation
-                        </Button>
+                        <Link to="/docs">
+                            <Button variant="outline" className="text-lg px-12 py-6 flex items-center gap-3">
+                                <FileText size={22} />
+                                View Documentation
+                            </Button>
+                        </Link>
                     </motion.div>
                 </motion.div>
 

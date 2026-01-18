@@ -5,6 +5,7 @@ import {
     LayoutDashboard,
     Globe,
     Bug,
+    Eye,
     Radar,
     Settings,
     Menu,
@@ -51,6 +52,7 @@ export default function DashboardLayout() {
             case '/dashboard': return 'Overview'
             case '/dashboard/web': return 'Web Analysis'
             case '/dashboard/malware': return 'Malware Analysis'
+            case '/dashboard/steg': return 'Steg Analysis'
             case '/dashboard/recon': return 'Recon Analysis'
             case '/dashboard/settings': return 'Settings'
             default: return 'Dashboard'
@@ -84,6 +86,7 @@ export default function DashboardLayout() {
                     <div className="my-4 h-px bg-foreground/10 mx-2" />
                     <SidebarItem to="/dashboard/web" icon={Globe} label="Web Analysis" collapsed={collapsed} />
                     <SidebarItem to="/dashboard/malware" icon={Bug} label="Malware Analysis" collapsed={collapsed} />
+                    <SidebarItem to="/dashboard/steg" icon={Eye} label="Steg Analysis" collapsed={collapsed} />
                     <SidebarItem to="/dashboard/recon" icon={Radar} label="Recon Analysis" collapsed={collapsed} />
                 </nav>
 

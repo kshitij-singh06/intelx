@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search, Globe, Shield, Activity, List, Server, TriangleAlert, CheckCircle, Clock, MapPin, Lock, FileText, Share2, Info, ChevronDown, ChevronUp, AlertCircle, Wifi, Mail, Link2, Cookie, ExternalLink } from 'lucide-react'
+import { Search, Globe, Shield, ShieldAlert, Activity, List, Server, TriangleAlert, CheckCircle, Clock, MapPin, Lock, FileText, Share2, Info, ChevronDown, ChevronUp, AlertCircle, Wifi, Mail, Link2, Cookie, ExternalLink } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 
 const API_BASE = 'http://localhost:5001/api/web-analyzer'
@@ -10,6 +10,8 @@ const API_ENDPOINTS = [
     { key: 'status', endpoint: '/status', name: 'Status Check' },
     { key: 'dns', endpoint: '/dns', name: 'DNS Records' },
     { key: 'headers', endpoint: '/headers', name: 'HTTP Headers' },
+    { key: 'securityHeaders', endpoint: '/security-headers', name: 'Security Headers' },
+    { key: 'securityTxt', endpoint: '/security-txt', name: 'Security.txt' },
     { key: 'techStack', endpoint: '/tech-stack', name: 'Tech Stack' },
     { key: 'whois', endpoint: '/whois', name: 'WHOIS' },
     { key: 'robotsTxt', endpoint: '/robots-txt', name: 'Robots.txt' },
@@ -26,6 +28,9 @@ const API_ENDPOINTS = [
     { key: 'dnssec', endpoint: '/dnssec', name: 'DNSSEC' },
     { key: 'firewall', endpoint: '/firewall', name: 'Firewall' },
     { key: 'dnsServer', endpoint: '/dns-server', name: 'DNS Server' },
+    { key: 'traceRoute', endpoint: '/trace-route', name: 'Trace Route' },
+    { key: 'tls', endpoint: '/tls', name: 'TLS Configuration' },
+    { key: 'rank', endpoint: '/rank', name: 'Domain Rank' },
     { key: 'carbon', endpoint: '/carbon', name: 'Carbon' },
     { key: 'blockLists', endpoint: '/block-lists', name: 'Block Lists' },
 ]
@@ -466,6 +471,306 @@ export default function WebAnalysisPage() {
                                         {getData('firewall').hasWaf ? `Protected by ${getData('firewall').waf}` : (getData('firewall').message || 'No WAF detected')}
                                     </div>
                                 </div>
+                            </div>
+                        ) : (
+                            <div className="text-foreground/40 text-sm">Loading...</div>
+                        )}
+                    </div>
+
+                    {/* Sitemap */}
+                    <div className="p-5 rounded-xl bg-[#0a0e17] border border-white/10">
+                        <CardHeader title="Sitemap" icon={List} status={getStatus('sitemap')} />
+                        {getData('sitemap') ? (
+                            <div className="space-y-2">
+                                <InfoRow label="Entries found" value={getData('sitemap').count} />
+                                <div className="text-xs text-foreground/40 truncate" title={getData('sitemap').url}>{getData('sitemap').url}</div>
+                                {getData('sitemap').entries?.length > 0 && (
+                                    <div className="max-h-[100px] overflow-y-auto custom-scrollbar mt-2 bg-white/5 p-2 rounded">
+                                        {getData('sitemap').entries.slice(0, 50).map((u, i) => (
+                                            <div key={i} className="text-xs text-foreground/60 truncate">{u}</div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="text-foreground/40 text-sm">Loading...</div>
+                        )}
+                    </div>
+
+                    {/* Block Lists */}
+                    <div className="p-5 rounded-xl bg-[#0a0e17] border border-white/10">
+                        <CardHeader title="Block Lists" icon={Shield} status={getStatus('blockLists')} />
+                        {getData('blockLists') ? (
+                            <div className="space-y-2">
+                                <div className="flex items-center gap-2">
+                                    <span className={`text-lg font-bold ${getData('blockLists').blocked ? 'text-red-500' : 'text-green-500'}`}>
+                                        {getData('blockLists').blocked ? 'BLOCKED' : 'CLEAN'}
+                                    </span>
+                                    {getData('blockLists').blocked && <ShieldAlert className="text-red-500" />}
+                                </div>
+                                {getData('blockLists').lists && (
+                                    <div className="text-xs text-foreground/50">Checked {Object.keys(getData('blockLists').lists).length} lists</div>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="text-foreground/40 text-sm">Loading...</div>
+                        )}
+                    </div>
+
+                    {/* Security Headers (Detailed) */}
+                    <div className="p-5 rounded-xl bg-[#0a0e17] border border-white/10">
+                        <CardHeader title="Security Headers" icon={Shield} status={getStatus('securityHeaders')} />
+                        {getData('securityHeaders') ? (
+                            <div className="space-y-4">
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className="text-sm font-bold text-foreground/70">Security Score</span>
+                                    <span className={`text-xl font-bold ${getData('securityHeaders').score >= 70 ? 'text-green-500' : getData('securityHeaders').score >= 40 ? 'text-yellow-500' : 'text-red-500'}`}>
+                                        {getData('securityHeaders').score}/100
+                                    </span>
+                                </div>
+                                <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                                    <div
+                                        className={`h-full ${getData('securityHeaders').score >= 70 ? 'bg-green-500' : getData('securityHeaders').score >= 40 ? 'bg-yellow-500' : 'bg-red-500'}`}
+                                        style={{ width: `${getData('securityHeaders').score}%` }}
+                                    />
+                                </div>
+
+                                <div className="pt-2">
+                                    <div className="text-xs text-foreground/50 mb-2 font-mono uppercase">Missing Headers</div>
+                                    <div className="flex flex-wrap gap-2">
+                                        {getData('securityHeaders').missing?.length > 0 ? getData('securityHeaders').missing.map(h => (
+                                            <span key={h} className="px-2 py-1 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded font-mono">{h}</span>
+                                        )) : <span className="text-green-500 text-xs">None!</span>}
+                                    </div>
+                                </div>
+
+                                <div className="pt-2">
+                                    <div className="text-xs text-foreground/50 mb-2 font-mono uppercase">Present Headers</div>
+                                    <div className="max-h-[150px] overflow-y-auto custom-scrollbar space-y-2">
+                                        {Object.entries(getData('securityHeaders').present || {}).map(([key, val]) => (
+                                            <div key={key} className="text-xs">
+                                                <span className="text-green-400 font-mono block">{key}</span>
+                                                <span className="text-white/60 truncate block" title={val}>{val.length > 50 ? val.substring(0, 50) + '...' : val}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="text-foreground/40 text-sm">Loading...</div>
+                        )}
+                    </div>
+
+                    {/* Security.txt */}
+                    <div className="p-5 rounded-xl bg-[#0a0e17] border border-white/10">
+                        <CardHeader title="Security.txt" icon={FileText} status={getStatus('securityTxt')} />
+                        {getData('securityTxt') ? (
+                            <div className="space-y-3">
+                                <InfoRow label="Found" value={getData('securityTxt').found ? 'Yes' : 'No'} />
+                                {getData('securityTxt').found && (
+                                    <>
+                                        {getData('securityTxt').fields?.contact && (
+                                            <div className="flex flex-col gap-1">
+                                                <span className="text-foreground/70 font-bold text-sm">Contact</span>
+                                                {getData('securityTxt').fields.contact.map((c, i) => (
+                                                    <a key={i} href={c} target="_blank" rel="noopener noreferrer" className="text-neon-green text-xs hover:underline truncate">{c}</a>
+                                                ))}
+                                            </div>
+                                        )}
+                                        {getData('securityTxt').fields?.expires && (
+                                            <InfoRow label="Expires" value={new Date(getData('securityTxt').fields.expires[0]).toLocaleDateString()} />
+                                        )}
+                                    </>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="text-foreground/40 text-sm">Loading...</div>
+                        )}
+                    </div>
+
+                    {/* TLS Info */}
+                    <div className="p-5 rounded-xl bg-[#0a0e17] border border-white/10">
+                        <CardHeader title="TLS Configuration" icon={Lock} status={getStatus('tls')} />
+                        {getData('tls') ? (
+                            <div className="space-y-1">
+                                <InfoRow label="Valid Cert" value={getData('tls').validCertificate ? 'Yes' : 'No'} />
+                                <InfoRow label="Version" value={getData('tls').tlsVersion} />
+                                <InfoRow label="Cipher" value={getData('tls').cipher?.name?.replace(/_/g, ' ')} />
+                                {getData('tls').certificateIssuer && (
+                                    <div className="mt-2 pt-2 border-t border-white/5">
+                                        <div className="text-xs text-foreground/50 mb-1">Issuer</div>
+                                        <div className="text-sm text-white">{getData('tls').certificateIssuer.organizationName}</div>
+                                        <div className="text-xs text-foreground/40">{getData('tls').certificateIssuer.commonName}</div>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="text-foreground/40 text-sm">Loading...</div>
+                        )}
+                    </div>
+
+                    {/* Trace Route */}
+                    <div className="p-5 rounded-xl bg-[#0a0e17] border border-white/10 md:col-span-2">
+                        <CardHeader title="Trace Route" icon={Share2} status={getStatus('traceRoute')} />
+                        {getData('traceRoute') ? (
+                            <div className="space-y-2">
+                                <div className="text-xs text-foreground/50 mb-2">Resolved IP: {getData('traceRoute').resolved_ip}</div>
+                                {getData('traceRoute').hops?.length > 0 ? (
+                                    <div className="relative pt-2">
+                                        <div className="absolute left-2.5 top-0 bottom-0 w-px bg-white/10" />
+                                        {getData('traceRoute').hops.map((hop, i) => (
+                                            <div key={i} className="flex items-start gap-4 mb-3 relative pl-8">
+                                                <div className="absolute left-[5px] top-[6px] w-1.5 h-1.5 rounded-full bg-neon-green" />
+                                                <span className="text-neon-yellow font-mono text-xs w-6">{hop.hop}</span>
+                                                <div className="flex-1">
+                                                    <div className="text-white text-sm font-mono">{hop.ip || hop.info}</div>
+                                                    {hop.hostname && <div className="text-xs text-foreground/40">{hop.hostname}</div>}
+                                                </div>
+                                                <div className="text-xs text-foreground/30 uppercase">{hop.type}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-xs text-foreground/50 italic">{getData('traceRoute').message}</div>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="text-foreground/40 text-sm">Loading...</div>
+                        )}
+                    </div>
+
+                    {/* Rank */}
+                    <div className="p-5 rounded-xl bg-[#0a0e17] border border-white/10">
+                        <CardHeader title="Domain Rank" icon={Activity} status={getStatus('rank')} />
+                        {getData('rank') ? (
+                            <div className="space-y-3">
+                                <div className="flex items-baseline gap-2">
+                                    <span className="text-3xl font-bold text-white">#{getData('rank').ranks?.[0]?.rank || 'N/A'}</span>
+                                    <span className="text-xs text-foreground/40">Current Rank</span>
+                                </div>
+                                {getData('rank').ranks?.length > 1 && (
+                                    <div className="h-[100px] flex items-end gap-1 border-b border-white/10 pb-1">
+                                        {getData('rank').ranks.slice(0, 10).reverse().map((r, i) => {
+                                            const height = Math.max(10, 100 - (r.rank / 100000)); // normalized logic
+                                            return (
+                                                <div key={i} className="flex-1 bg-neon-green/20 hover:bg-neon-green/40 transition-colors rounded-t relative group" style={{ height: '40%' }}>
+                                                    <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 text-[10px] bg-black text-white px-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap z-10">
+                                                        #{r.rank} ({r.date})
+                                                    </div>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="text-foreground/40 text-sm">Loading...</div>
+                        )}
+                    </div>
+
+                    {/* Mail Config */}
+                    <div className="p-5 rounded-xl bg-[#0a0e17] border border-white/10">
+                        <CardHeader title="Mail Configuration" icon={Mail} status={getStatus('mailConfig')} />
+                        {getData('mailConfig') ? (
+                            <div className="space-y-3">
+                                {getData('mailConfig').mailServices?.length > 0 && (
+                                    <div>
+                                        <div className="text-xs text-foreground/50 mb-1">Services</div>
+                                        {getData('mailConfig').mailServices.map((s, i) => (
+                                            <div key={i} className="px-2 py-1 bg-white/5 rounded text-xs text-white">{s.provider}</div>
+                                        ))}
+                                    </div>
+                                )}
+                                <div className="border-t border-white/5 pt-2">
+                                    <div className="text-xs text-foreground/50 mb-1">MX Records</div>
+                                    {getData('mailConfig').mxRecords?.length > 0 ? getData('mailConfig').mxRecords.map((mx, i) => (
+                                        <div key={i} className="text-xs font-mono text-white/80">{mx.exchange}</div>
+                                    )) : <div className="text-xs text-foreground/30">No MX records</div>}
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="text-foreground/40 text-sm">Loading...</div>
+                        )}
+                    </div>
+
+                    {/* DNSSEC */}
+                    <div className="p-5 rounded-xl bg-[#0a0e17] border border-white/10">
+                        <CardHeader title="DNSSEC" icon={Lock} status={getStatus('dnssec')} />
+                        {getData('dnssec') ? (
+                            <div className="space-y-2">
+                                <InfoRow label="DNSKEY" value={getData('dnssec').DNSKEY?.isFound ? 'Found' : 'Not Found'} />
+                                <InfoRow label="DS Record" value={getData('dnssec').DS?.isFound ? 'Found' : 'Not Found'} />
+                                <InfoRow label="RRSIG" value={getData('dnssec').RRSIG?.isFound ? 'Found' : 'Not Found'} />
+                                {getData('dnssec').DS?.response?.Status === 0 && (
+                                    <div className="mt-2 text-center">
+                                        <span className="px-2 py-1 bg-green-500/10 text-green-500 text-xs rounded border border-green-500/20">DNSSEC VALIDATED</span>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="text-foreground/40 text-sm">Loading...</div>
+                        )}
+                    </div>
+
+                    {/* Linked Pages */}
+                    <div className="p-5 rounded-xl bg-[#0a0e17] border border-white/10">
+                        <CardHeader title="Linked Pages" icon={Link2} status={getStatus('linkedPages')} />
+                        {getData('linkedPages') ? (
+                            <div className="text-sm">
+                                {getData('linkedPages').skipped ? (
+                                    <div className="text-foreground/50 italic p-2 bg-white/5 rounded">
+                                        {getData('linkedPages').skipped}
+                                    </div>
+                                ) : (
+                                    <div className="space-y-1">
+                                        <InfoRow label="Internal" value={getData('linkedPages').internal?.length || 0} />
+                                        <InfoRow label="External" value={getData('linkedPages').external?.length || 0} />
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="text-foreground/40 text-sm">Loading...</div>
+                        )}
+                    </div>
+
+                    {/* Robots.txt */}
+                    <div className="p-5 rounded-xl bg-[#0a0e17] border border-white/10">
+                        <CardHeader title="Robots.txt" icon={FileText} status={getStatus('robotsTxt')} />
+                        {getData('robotsTxt') ? (
+                            <div className="text-xs font-mono">
+                                {getData('robotsTxt').robots ? (
+                                    <div className="max-h-[150px] overflow-y-auto custom-scrollbar bg-black/30 p-2 rounded">
+                                        {getData('robotsTxt').robots.slice(0, 10).map((r, i) => (
+                                            <div key={i} className={r.type === 'Disallow' ? 'text-red-400' : 'text-green-400'}>
+                                                <span className="opacity-50">{r.type}: </span>{r.value}
+                                            </div>
+                                        ))}
+                                        {getData('robotsTxt').robots.length > 10 && (
+                                            <div className="text-foreground/30 italic pt-1">...{getData('robotsTxt').robots.length - 10} more rules</div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="text-foreground/40">No robots.txt found</div>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="text-foreground/40 text-sm">Loading...</div>
+                        )}
+                    </div>
+
+                    {/* TXT Records */}
+                    <div className="p-5 rounded-xl bg-[#0a0e17] border border-white/10">
+                        <CardHeader title="TXT Records" icon={List} status={getStatus('txtRecords')} />
+                        {getData('txtRecords') ? (
+                            <div className="max-h-[200px] overflow-y-auto custom-scrollbar space-y-2">
+                                {(getData('txtRecords')['adobe-idp-site-verification'] || getData('txtRecords').data || []).toString().split(' ').map((txt, i) => (
+                                    <div key={i} className="p-2 bg-white/5 rounded text-xs font-mono text-foreground/80 break-all">
+                                        {txt.replace(/"/g, '')}
+                                    </div>
+                                ))}
+                                {Object.keys(getData('txtRecords')).length === 0 && (
+                                    <div className="text-foreground/40">No TXT records</div>
+                                )}
                             </div>
                         ) : (
                             <div className="text-foreground/40 text-sm">Loading...</div>

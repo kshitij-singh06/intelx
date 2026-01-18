@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Button } from '../ui/Button'
-import { Zap, Shield, Search } from 'lucide-react'
+import { Zap, Shield, Search,Eye } from 'lucide-react'
 
 // Animated background component with particles and grid
 function AnimatedBackground() {
@@ -107,6 +107,7 @@ export function HeroSection() {
         { icon: Zap, label: 'Web Analysis', desc: 'Deep website intelligence', link: '/dashboard/web' },
         { icon: Shield, label: 'Malware Analysis', desc: 'Forensic file inspection', link: '/dashboard/malware' },
         { icon: Search, label: 'Recon Analysis', desc: 'Digital footprint tracking', link: '/dashboard/recon' },
+         { icon: Eye, label: 'Steganography Analysis', desc: 'Hidden Data Detection', link: '/dashboard/steg' }
     ]
 
     return (

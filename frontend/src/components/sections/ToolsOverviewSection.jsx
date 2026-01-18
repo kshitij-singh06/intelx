@@ -1,7 +1,7 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { Globe, Bug, Radar, ArrowRight } from 'lucide-react'
+import { Globe, Bug, Eye, Radar, ArrowRight } from 'lucide-react'
 
 const tools = [
     {
@@ -21,7 +21,7 @@ const tools = [
         ],
         gradient: 'from-neon-green/20 via-neon-green/5 to-transparent',
         accent: 'neon-green',
-        link: '/dashboard/web'
+        link: '/docs/web-analyzer'
     },
     {
         icon: Bug,
@@ -38,7 +38,7 @@ const tools = [
         ],
         gradient: 'from-red-500/20 via-red-500/5 to-transparent',
         accent: 'red-400',
-        link: '/dashboard/malware'
+        link: '/docs/malware-analysis'
     },
     {
         icon: Radar,
@@ -54,7 +54,23 @@ const tools = [
         ],
         gradient: 'from-neon-yellow/20 via-neon-yellow/5 to-transparent',
         accent: 'neon-yellow',
-        link: '/dashboard/recon'
+        link: '/docs/recon-analysis'
+    },
+    {
+        icon: Eye,
+        title: 'Steg Analysis',
+        subtitle: 'Hidden Data Detection',
+        description: 'Advanced steganography detection and analysis toolkit for uncovering hidden data within images and files.',
+        highlight: 'Multi-tool forensic steg analysis',
+        features: [
+            'Binwalk & Foremost extraction',
+            'Steghide & OpenStego detection',
+            'EXIF metadata analysis',
+            'Bit-plane decomposition',
+        ],
+        gradient: 'from-purple-500/20 via-purple-500/5 to-transparent',
+        accent: 'purple-400',
+        link: '/docs/steg-analysis'
     },
 ]
 
@@ -114,7 +130,7 @@ export function ToolsOverviewSection() {
                         Core Capabilities
                     </motion.span>
                     <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground font-mono">
-                        Three Tools.{' '}
+                        Four Tools.{' '}
                         <span className="text-neon-green" style={{ textShadow: '0 0 40px rgba(0, 255, 0, 0.4)' }}>
                             One Platform.
                         </span>
@@ -124,7 +140,7 @@ export function ToolsOverviewSection() {
                     </p>
                 </motion.div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8">
                     {tools.map((tool, index) => (
                         <motion.div
                             key={index}
@@ -208,7 +224,7 @@ export function ToolsOverviewSection() {
                                             style={{ color: index === 1 ? '#f87171' : undefined }}
                                             whileHover={{ x: 4 }}
                                         >
-                                            Launch Tool
+                                            Learn More
                                             <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
                                         </motion.button>
                                     </Link>
