@@ -7,6 +7,7 @@ import {
     Bug,
     Eye,
     Radar,
+    Link2,
     Settings,
     Menu,
     X,
@@ -54,6 +55,7 @@ export default function DashboardLayout() {
             case '/dashboard/malware': return 'Malware Analysis'
             case '/dashboard/steg': return 'Steg Analysis'
             case '/dashboard/recon': return 'Recon Analysis'
+            case '/dashboard/url': return 'URL Analyzer'
             case '/dashboard/settings': return 'Settings'
             default: return 'Dashboard'
         }
@@ -88,6 +90,7 @@ export default function DashboardLayout() {
                     <SidebarItem to="/dashboard/malware" icon={Bug} label="Malware Analysis" collapsed={collapsed} />
                     <SidebarItem to="/dashboard/steg" icon={Eye} label="Steg Analysis" collapsed={collapsed} />
                     <SidebarItem to="/dashboard/recon" icon={Radar} label="Recon Analysis" collapsed={collapsed} />
+                    <SidebarItem to="/dashboard/url" icon={Link2} label="URL Analyzer" collapsed={collapsed} />
                 </nav>
 
                 {/* Bottom Actions */}

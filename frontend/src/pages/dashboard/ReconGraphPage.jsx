@@ -166,8 +166,8 @@ export default function ReconGraphPage() {
                 </div>
                 {healthStatus && (
                     <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono ${healthStatus === 'healthy'
-                            ? 'bg-green-500/10 text-green-400 border border-green-500/30'
-                            : 'bg-red-500/10 text-red-400 border border-red-500/30'
+                        ? 'bg-green-500/10 text-green-400 border border-green-500/30'
+                        : 'bg-red-500/10 text-red-400 border border-red-500/30'
                         }`}>
                         <div className={`w-2 h-2 rounded-full ${healthStatus === 'healthy' ? 'bg-green-400' : 'bg-red-400'} animate-pulse`} />
                         {healthStatus === 'healthy' ? 'System Online' : 'System Offline'}
@@ -180,8 +180,8 @@ export default function ReconGraphPage() {
                 <button
                     onClick={() => { setMode('threat'); setResults(null); setQuery(''); }}
                     className={`px-5 py-2.5 rounded-lg font-mono text-sm transition-all ${mode === 'threat'
-                            ? 'bg-neon-yellow/20 text-neon-yellow border border-neon-yellow/30'
-                            : 'text-foreground/60 hover:text-white'
+                        ? 'bg-neon-yellow/20 text-neon-yellow border border-neon-yellow/30'
+                        : 'text-foreground/60 hover:text-white'
                         }`}
                 >
                     <Globe size={16} className="inline mr-2" />
@@ -190,8 +190,8 @@ export default function ReconGraphPage() {
                 <button
                     onClick={() => { setMode('footprint'); setResults(null); setQuery(''); }}
                     className={`px-5 py-2.5 rounded-lg font-mono text-sm transition-all ${mode === 'footprint'
-                            ? 'bg-neon-yellow/20 text-neon-yellow border border-neon-yellow/30'
-                            : 'text-foreground/60 hover:text-white'
+                        ? 'bg-neon-yellow/20 text-neon-yellow border border-neon-yellow/30'
+                        : 'text-foreground/60 hover:text-white'
                         }`}
                 >
                     <Users size={16} className="inline mr-2" />
@@ -290,69 +290,116 @@ export default function ReconGraphPage() {
                     </div>
 
                     {/* IP Intelligence */}
-                    {results.data.ipapi && (
+                    {results.data.ipapi?.ip_info?.[0] && (
                         <ResultCard title="IP Intelligence" icon={MapPin} color="neon-green">
                             <div className="space-y-1">
-                                <InfoRow label="IP Address" value={results.data.ipapi.ip} icon={Server} />
-                                <InfoRow label="City" value={results.data.ipapi.city} icon={MapPin} />
-                                <InfoRow label="Region" value={results.data.ipapi.region} />
-                                <InfoRow label="Country" value={results.data.ipapi.country_name} />
-                                <InfoRow label="ISP" value={results.data.ipapi.org} icon={Wifi} />
-                                <InfoRow label="ASN" value={results.data.ipapi.asn} />
-                                <InfoRow label="Timezone" value={results.data.ipapi.timezone} />
+                                <InfoRow label="ISP" value={results.data.ipapi.ip_info[0].isp} icon={Wifi} />
+                                <InfoRow label="Organization" value={results.data.ipapi.ip_info[0].org} icon={Server} />
+                                <InfoRow label="AS" value={results.data.ipapi.ip_info[0].as} />
+                                <InfoRow label="Location" value={`${results.data.ipapi.ip_info[0].city}, ${results.data.ipapi.ip_info[0].country}`} icon={MapPin} />
+                                <InfoRow label="Timezone" value={results.data.ipapi.ip_info[0].timezone} />
+                                <InfoRow label="Zip" value={results.data.ipapi.ip_info[0].zip} />
                             </div>
                         </ResultCard>
                     )}
 
-                    {/* Reputation */}
-                    <ResultCard title="Reputation Check" icon={Shield} color={results.data.talos?.blacklisted ? 'red-500' : 'neon-green'}>
+                    {/* Reputation & Threat Signals */}
+                    <ResultCard title="Threat Signals" icon={Shield} color={calculateRisk(results.data) === 'high' ? 'red-500' : 'neon-green'}>
                         <div className="space-y-4">
-                            <div className={`p-4 rounded-xl text-center ${results.data.talos?.blacklisted
+                            <div className="grid grid-cols-2 gap-4">
+                                {/* Talos */}
+                                <div className={`p-3 rounded-lg text-center ${results.data.talos?.blacklisted
                                     ? 'bg-red-500/10 border border-red-500/30'
                                     : 'bg-green-500/10 border border-green-500/30'
-                                }`}>
-                                {results.data.talos?.blacklisted ? (
-                                    <div className="flex items-center justify-center gap-2 text-red-400">
-                                        <XCircle size={24} />
-                                        <span className="font-bold">BLACKLISTED</span>
+                                    }`}>
+                                    <div className="text-xs font-mono mb-1 text-foreground/60">Cisco Talos</div>
+                                    <div className={`font-bold ${results.data.talos?.blacklisted ? 'text-red-400' : 'text-green-400'}`}>
+                                        {results.data.talos?.blacklisted ? 'BLACKLISTED' : 'CLEAN'}
                                     </div>
-                                ) : (
-                                    <div className="flex items-center justify-center gap-2 text-green-400">
-                                        <CheckCircle size={24} />
-                                        <span className="font-bold">CLEAN</span>
+                                </div>
+
+                                {/* TOR */}
+                                <div className={`p-3 rounded-lg text-center ${results.data.tor?.is_tor_exit
+                                    ? 'bg-red-500/10 border border-red-500/30'
+                                    : 'bg-green-500/10 border border-green-500/30'
+                                    }`}>
+                                    <div className="text-xs font-mono mb-1 text-foreground/60">TOR Node</div>
+                                    <div className={`font-bold ${results.data.tor?.is_tor_exit ? 'text-red-400' : 'text-green-400'}`}>
+                                        {results.data.tor?.is_tor_exit ? 'EXIT NODE' : 'FALSE'}
                                     </div>
-                                )}
+                                </div>
                             </div>
-                            <p className="text-foreground/60 text-sm text-center">
-                                Checked against Cisco Talos threat intelligence database
-                            </p>
+
+                            {/* ThreatFox */}
+                            {results.data.threatfox && (
+                                <div className="pt-2 border-t border-white/5">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="text-foreground/60 text-sm">ThreatFox Analysis</span>
+                                        {results.data.threatfox.found ? (
+                                            <span className="text-xs font-bold text-red-500 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded">DETECTED</span>
+                                        ) : (
+                                            <span className="text-xs font-bold text-green-500 bg-green-500/10 border border-green-500/20 px-2 py-0.5 rounded">CLEAN</span>
+                                        )}
+                                    </div>
+
+                                    {results.data.threatfox.found && (
+                                        <div className="space-y-2 mt-2 bg-red-500/5 p-3 rounded-lg border border-red-500/10">
+                                            <div className="grid grid-cols-2 gap-2 text-xs">
+                                                <div>
+                                                    <span className="text-foreground/40 block">Type</span>
+                                                    <span className="text-white font-mono">{results.data.threatfox.threat_type?.replace('_', ' ').toUpperCase()}</span>
+                                                </div>
+                                                <div>
+                                                    <span className="text-foreground/40 block">Malware</span>
+                                                    <span className="text-white font-mono">{results.data.threatfox.malware}</span>
+                                                </div>
+                                                <div className="col-span-2">
+                                                    <span className="text-foreground/40 block">IOC</span>
+                                                    <span className="text-white font-mono break-all">{results.data.threatfox.ioc}</span>
+                                                </div>
+                                                <div>
+                                                    <span className="text-foreground/40 block">Conf. Level</span>
+                                                    <span className="text-neon-yellow font-mono">{results.data.threatfox.confidence_level}%</span>
+                                                </div>
+                                                <div>
+                                                    <span className="text-foreground/40 block">ID</span>
+                                                    <span className="text-foreground/60 font-mono">#{results.data.threatfox.id}</span>
+                                                </div>
+                                            </div>
+                                            {results.data.threatfox.link && (
+                                                <a href={results.data.threatfox.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-[10px] text-blue-400 hover:underline mt-1">
+                                                    View Report <ExternalLink size={10} />
+                                                </a>
+                                            )}
+                                        </div>
+                                    )}
+                                    {results.data.threatfox.error && (
+                                        <div className="text-xs text-foreground/40 mt-1 italic">API Note: {results.data.threatfox.error}</div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </ResultCard>
 
-                    {/* Anonymity */}
-                    <ResultCard title="Anonymity Detection" icon={results.data.tor?.is_tor_exit ? EyeOff : Eye} color={results.data.tor?.is_tor_exit ? 'red-500' : 'neon-green'}>
-                        <div className="space-y-4">
-                            <div className={`p-4 rounded-xl text-center ${results.data.tor?.is_tor_exit
-                                    ? 'bg-red-500/10 border border-red-500/30'
-                                    : 'bg-green-500/10 border border-green-500/30'
-                                }`}>
-                                {results.data.tor?.is_tor_exit ? (
-                                    <div className="flex items-center justify-center gap-2 text-red-400">
-                                        <EyeOff size={24} />
-                                        <span className="font-bold">TOR EXIT NODE</span>
+                    {/* Tranco Rank */}
+                    {results.data.tranco && (
+                        <ResultCard title="Web Ranking" icon={Activity} color="neon-yellow">
+                            <div className="space-y-2">
+                                <div className={`px-4 py-2 rounded-xl border ${results.data.tranco.found
+                                    ? 'bg-neon-yellow/10 border-neon-yellow/30'
+                                    : 'bg-white/5 border-white/10'
+                                    }`}>
+                                    <div className="text-xs text-foreground/60 font-mono uppercase mb-1">Tranco Global Rank</div>
+                                    <div className={`text-2xl font-bold font-mono ${results.data.tranco.found ? 'text-neon-yellow' : 'text-foreground/40'}`}>
+                                        {results.data.tranco.found ? `#${results.data.tranco.rank.toLocaleString()}` : 'Unranked'}
                                     </div>
-                                ) : (
-                                    <div className="flex items-center justify-center gap-2 text-green-400">
-                                        <Eye size={24} />
-                                        <span className="font-bold">NOT TOR</span>
-                                    </div>
-                                )}
+                                </div>
+                                <p className="text-xs text-foreground/50">
+                                    Tranco is a research-oriented top 1 million sites ranking.
+                                </p>
                             </div>
-                            <p className="text-foreground/60 text-sm text-center">
-                                Checked if IP is a known TOR exit node
-                            </p>
-                        </div>
-                    </ResultCard>
+                        </ResultCard>
+                    )}
 
                     {/* Raw Data */}
                     <ResultCard title="Raw Response" icon={Activity} color="foreground/60" collapsed>
@@ -371,44 +418,129 @@ export default function ReconGraphPage() {
                     className="grid grid-cols-1 lg:grid-cols-2 gap-6"
                 >
                     {/* Username Results */}
-                    {results.subtype === 'username' && results.data.username_scan && (
+                    {results.subtype === 'username' && (
                         <>
                             <div className="lg:col-span-2 p-6 rounded-2xl bg-gradient-to-br from-[#0a0e17] to-[#0d1225] border border-white/10">
                                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                     <div>
                                         <p className="text-foreground/60 text-sm mb-1">Username</p>
-                                        <h2 className="text-2xl font-bold text-white font-mono">@{results.data.username_scan.query || query}</h2>
+                                        <h2 className="text-2xl font-bold text-white font-mono">@{results.data.query || query}</h2>
                                     </div>
                                     <div className="flex items-center gap-4">
                                         <div className="text-right">
-                                            <p className="text-3xl font-bold text-neon-yellow">{results.data.username_scan.count}</p>
+                                            <p className="text-3xl font-bold text-neon-yellow">
+                                                {Array.isArray(results.data.username_scan) ? results.data.username_scan.length : 0}
+                                            </p>
                                             <p className="text-foreground/60 text-xs">Platforms Found</p>
                                         </div>
-                                        <RiskBadge level={getFootprintRisk(results.data)} />
                                     </div>
                                 </div>
                             </div>
 
-                            <ResultCard title="Platform Presence" icon={Users} color="neon-yellow">
-                                <div className="flex flex-wrap gap-2">
-                                    {results.data.username_scan.found?.map((platform, i) => (
-                                        <span key={i} className="px-3 py-1.5 bg-neon-yellow/10 border border-neon-yellow/30 rounded-lg text-neon-yellow text-xs font-mono">
-                                            {platform}
-                                        </span>
-                                    ))}
-                                </div>
-                            </ResultCard>
+                            <div className="lg:col-span-2">
+                                <ResultCard title="Platform Presence" icon={Users} color="neon-yellow">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                        {Array.isArray(results.data.username_scan) && results.data.username_scan.map((item, i) => (
+                                            <a
+                                                key={i}
+                                                href={item.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10 hover:border-neon-yellow/50 hover:bg-neon-yellow/5 transition-all group"
+                                            >
+                                                <span className="text-sm font-mono text-white group-hover:text-neon-yellow">{item.site}</span>
+                                                <ExternalLink size={14} className="text-foreground/40 group-hover:text-neon-yellow" />
+                                            </a>
+                                        ))}
+                                        {(!results.data.username_scan || results.data.username_scan.length === 0) && (
+                                            <div className="text-foreground/40 col-span-full py-4 text-center italic">
+                                                No accounts found for this username.
+                                            </div>
+                                        )}
+                                    </div>
+                                </ResultCard>
+                            </div>
                         </>
                     )}
 
-                    {/* Phone Results */}
+                    {/* Email Results (Breach Data) */}
+                    {results.subtype === 'email' && results.data.email_scan && (
+                        <>
+                            <div className="lg:col-span-2 p-6 rounded-2xl bg-gradient-to-br from-[#0a0e17] to-[#0d1225] border border-white/10">
+                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div>
+                                        <p className="text-foreground/60 text-sm mb-1">Email Address</p>
+                                        <h2 className="text-2xl font-bold text-white font-mono">{results.data.query || query}</h2>
+                                    </div>
+                                    <div className="flex items-center gap-4">
+                                        <RiskBadge
+                                            level={
+                                                results.data.email_scan.risk?.[0]?.risk_label?.toLowerCase() ||
+                                                (results.data.email_scan.breach_count > 0 ? 'high' : 'low')
+                                            }
+                                        />
+                                        <div className="text-right pl-4 border-l border-white/10">
+                                            <p className={`text-3xl font-bold ${results.data.email_scan.breach_count > 0 ? 'text-red-500' : 'text-green-500'}`}>
+                                                {results.data.email_scan.breach_count || 0}
+                                            </p>
+                                            <p className="text-foreground/60 text-xs">Breaches Found</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="lg:col-span-2">
+                                <ResultCard title="Data Breaches" icon={AlertTriangle} color={results.data.email_scan.breach_count > 0 ? 'red-500' : 'green-400'}>
+                                    <div className="space-y-4">
+                                        {results.data.email_scan.breaches && results.data.email_scan.breaches.map((breach, i) => (
+                                            <div key={i} className="p-4 rounded-xl bg-white/5 border border-white/10 flex flex-col md:flex-row gap-4">
+                                                {breach.logo && !breach.logo.includes('[') && (
+                                                    <div className="w-16 h-16 shrink-0 bg-white/10 rounded-lg p-2 flex items-center justify-center">
+                                                        <img src={breach.logo} alt={breach.breach} className="max-w-full max-h-full" onError={(e) => e.target.style.display = 'none'} />
+                                                    </div>
+                                                )}
+                                                <div className="flex-1">
+                                                    <div className="flex items-center justify-between mb-2">
+                                                        <h4 className="font-bold text-white text-lg">{breach.breach}</h4>
+                                                        <span className="text-xs px-2 py-1 rounded bg-red-500/20 text-red-400 border border-red-500/20 font-mono">
+                                                            {breach.xposed_date}
+                                                        </span>
+                                                    </div>
+                                                    <p className="text-sm text-foreground/70 mb-3 leading-relaxed">
+                                                        {breach.details?.length > 200 ? breach.details.substring(0, 200) + '...' : breach.details}
+                                                    </p>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        <span className="text-xs text-foreground/40 uppercase font-mono mr-2 pt-1">Compromised Data:</span>
+                                                        {breach.xposed_data && breach.xposed_data.split(';').map((item, j) => (
+                                                            <span key={j} className="px-2 py-0.5 rounded-md bg-white/10 text-xs text-foreground/80">
+                                                                {item.trim()}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                        {(!results.data.email_scan.breaches || results.data.email_scan.breaches.length === 0) && (
+                                            <div className="flex flex-col items-center justify-center py-8 text-center">
+                                                <CheckCircle size={48} className="text-green-500/20 mb-4" />
+                                                <h4 className="text-green-400 font-bold mb-1">No Breaches Found</h4>
+                                                <p className="text-foreground/50 text-sm">This email address does not appear in known data breaches.</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </ResultCard>
+                            </div>
+                        </>
+                    )}
+
+                    {/* Phone Results (Unchanged for now as no new data provided) */}
                     {results.subtype === 'phone' && results.data.phone_scan && (
                         <>
                             <div className="lg:col-span-2 p-6 rounded-2xl bg-gradient-to-br from-[#0a0e17] to-[#0d1225] border border-white/10">
                                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                     <div>
                                         <p className="text-foreground/60 text-sm mb-1">Phone Number</p>
-                                        <h2 className="text-2xl font-bold text-white font-mono">{query}</h2>
+                                        <h2 className="text-2xl font-bold text-white font-mono">{results.data.query || query}</h2>
                                     </div>
                                     <div className={`px-4 py-2 rounded-full text-sm font-mono ${results.data.phone_scan.valid
                                             ? 'bg-green-500/10 text-green-400 border border-green-500/30'
@@ -421,37 +553,11 @@ export default function ReconGraphPage() {
 
                             <ResultCard title="Phone Metadata" icon={Phone} color="neon-green">
                                 <div className="space-y-1">
-                                    <InfoRow label="Country" value={results.data.phone_scan.country} />
-                                    <InfoRow label="Carrier" value={results.data.phone_scan.carrier} />
-                                    <InfoRow label="Line Type" value={results.data.phone_scan.line_type} />
-                                </div>
-                            </ResultCard>
-                        </>
-                    )}
-
-                    {/* Email Results */}
-                    {results.subtype === 'email' && results.data.email_scan && (
-                        <>
-                            <div className="lg:col-span-2 p-6 rounded-2xl bg-gradient-to-br from-[#0a0e17] to-[#0d1225] border border-white/10">
-                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                    <div>
-                                        <p className="text-foreground/60 text-sm mb-1">Email Address</p>
-                                        <h2 className="text-2xl font-bold text-white font-mono">{query}</h2>
-                                    </div>
-                                    <div className={`px-4 py-2 rounded-full text-sm font-mono ${results.data.email_scan.deliverable
-                                            ? 'bg-green-500/10 text-green-400 border border-green-500/30'
-                                            : 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/30'
-                                        }`}>
-                                        {results.data.email_scan.deliverable ? 'DELIVERABLE' : 'RISKY'}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <ResultCard title="Email Analysis" icon={Mail} color="neon-green">
-                                <div className="space-y-1">
-                                    <InfoRow label="Domain" value={results.data.email_scan.domain} />
-                                    <InfoRow label="Disposable" value={results.data.email_scan.disposable ? 'Yes' : 'No'} />
-                                    <InfoRow label="Free Provider" value={results.data.email_scan.free ? 'Yes' : 'No'} />
+                                    <InfoRow label="Country" value={results.data.phone_scan.country_name} />
+                                    <InfoRow label="Country Code" value={results.data.phone_scan.country_code} />
+                                    <InfoRow label="Location" value={results.data.phone_scan.location || 'N/A'} />
+                                    <InfoRow label="Carrier" value={results.data.phone_scan.carrier || 'N/A'} />
+                                    <InfoRow label="Line Type" value={results.data.phone_scan.line_type?.replace(/_/g, ' ').toUpperCase()} />
                                 </div>
                             </ResultCard>
                         </>

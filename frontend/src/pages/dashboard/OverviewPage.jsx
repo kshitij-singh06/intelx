@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Globe, Bug, Radar, Search, ArrowRight } from 'lucide-react'
+import { Globe, Bug, Radar, Search, ArrowRight, Eye, Link2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '../../components/ui/Button'
 
@@ -30,7 +30,7 @@ export default function OverviewPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h2 className="text-3xl font-bold text-white mb-2">Welcome Back, <span className="text-neon-green">Analyst</span></h2>
-                    <p className="text-foreground/60">System status optimal. 3 engines ready for deployment.</p>
+                    <p className="text-foreground/60">System status optimal. 5 engines ready for deployment.</p>
                 </div>
                 <div className="flex gap-3">
                     <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20">
@@ -58,27 +58,41 @@ export default function OverviewPage() {
             </div>
 
             {/* Quick Actions Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 <QuickActionCard
                     title="Web Analysis"
-                    description="Deep scan for vulnerabilities, headers, DNS, and tech stack."
+                    description="Scan for vulnerabilities, headers, DNS."
                     icon={Globe}
                     to="/dashboard/web"
                     color="neon-green"
                 />
                 <QuickActionCard
                     title="Malware Analysis"
-                    description="Static and dynamic analysis of suspicious files and hashes."
+                    description="Static and dynamic file analysis."
                     icon={Bug}
                     to="/dashboard/malware"
-                    color="red-500" // Tailwind needs full class names for dynamic usage usually, handled via careful class construction or style prop
+                    color="red-500"
                 />
                 <QuickActionCard
                     title="Recon Analysis"
-                    description="OSINT gathering for users, emails, and exposed data."
+                    description="OSINT for users and exposed data."
                     icon={Radar}
                     to="/dashboard/recon"
                     color="neon-yellow"
+                />
+                <QuickActionCard
+                    title="Steg Analysis"
+                    description="Detect hidden data in files."
+                    icon={Eye}
+                    to="/dashboard/steg"
+                    color="purple-500"
+                />
+                <QuickActionCard
+                    title="URL Analyzer"
+                    description="Trace redirects & assess safety."
+                    icon={Link2}
+                    to="/dashboard/url"
+                    color="blue-500"
                 />
             </div>
         </div>

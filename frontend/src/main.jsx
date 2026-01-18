@@ -11,6 +11,7 @@ import WebAnalysisPage from './pages/dashboard/WebAnalysisPage'
 import MalwareAnalysisPage from './pages/dashboard/MalwareAnalysisPage'
 import StegAnalysisPage from './pages/dashboard/StegAnalysisPage'
 import ReconGraphPage from './pages/dashboard/ReconGraphPage'
+import URLAnalyzerPage from './pages/dashboard/URLAnalyzerPage'
 
 // Docs
 import DocsLayout from './layouts/DocsLayout'
@@ -33,6 +34,7 @@ createRoot(document.getElementById('root')).render(
                     <Route path="malware" element={<MalwareAnalysisPage />} />
                     <Route path="steg" element={<StegAnalysisPage />} />
                     <Route path="recon" element={<ReconGraphPage />} />
+                    <Route path="url" element={<URLAnalyzerPage />} />
                     <Route path="settings" element={<div className="text-white p-8">Settings Panel (Placeholder)</div>} />
                 </Route>
 
