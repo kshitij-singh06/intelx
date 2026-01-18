@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  url-analyzer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: url-analyzer
+    ports:
+      - "5004:5000"
+    environment:
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./:/app
+    restart: unless-stopped
+    networks:
+      - intelx-network
+
+networks:
+  intelx-network:
+    driver: bridge
