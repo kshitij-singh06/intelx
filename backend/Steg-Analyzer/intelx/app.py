@@ -12,14 +12,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
-import sentry_sdk
-from flask import Blueprint, Flask, Response, abort, jsonify, render_template, request, send_file
+from flask import Blueprint, Flask, Response, abort, jsonify, request, send_file
 from redis import Redis
 from rq import Queue
 
-from .utils.sentry import initialize_sentry
 
-initialize_sentry()
 
 from .config import (
     IMAGE_EXTENSIONS,
@@ -46,14 +43,7 @@ def create_app() -> Flask:
     @app.errorhandler(413)
     def too_large(_: Any) -> tuple[Response, int]:
         """Error Handler for Max File Size."""
-        sentry_sdk.set_context(
-            "upload",
-            {
-                "content_length": request.content_length,
-                "max_allowed": app.config["MAX_CONTENT_LENGTH"],
-            },
-        )
-        sentry_sdk.capture_message("Upload failed: 413 Payload Too Large", level="warning")
+        print("Upload failed: 413 Payload Too Large")
         return jsonify({"error": "Image size exceeded"}), 413
 
     @app.errorhandler(404)
@@ -292,7 +282,7 @@ def create_app() -> Flask:
             try:
                 shutil.copy2(original_image_path, archive_path)
             except Exception as e:
-                sentry_sdk.capture_exception(e)
+                print(f"Failed to archive image: {e}")
                 return jsonify({"error": "Failed to archive image"}), 500
 
         # Delete the results folder
@@ -301,7 +291,7 @@ def create_app() -> Flask:
             if result_path.exists():
                 shutil.rmtree(result_path)
         except Exception as e:
-            sentry_sdk.capture_exception(e)
+            print(f"Failed to delete results: {e}")
             return jsonify({"error": "Failed to delete results"}), 500
 
         # Delete submission from database
@@ -318,7 +308,7 @@ def create_app() -> Flask:
             db.session.commit()  # pylint: disable=no-member
         except Exception as e:
             db.session.rollback()  # pylint: disable=no-member
-            sentry_sdk.capture_exception(e)
+            print(f"Failed to update database: {e}")
             return jsonify({"error": "Failed to update database"}), 500
 
         # Note: UploadLog entries are intentionally kept for audit purposes
@@ -374,7 +364,7 @@ def create_app() -> Flask:
             db.session.commit()  # pylint: disable=no-member
         except Exception as e:
             db.session.rollback()  # pylint: disable=no-member
-            sentry_sdk.capture_exception(e)
+            print(f"Failed to remove password: {e}")
             return jsonify({"error": "Failed to remove password"}), 500
 
         return jsonify({"message": "Password successfully removed"}), 200
