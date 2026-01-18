@@ -337,8 +337,14 @@ export default function StegAnalysisPage() {
                     </h2>
                     <p className="text-foreground/60">Steganography Detection & Analysis</p>
                 </div>
-                <div className="px-3 py-1 rounded bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-mono flex items-center gap-2">
-                    <ImageIcon size={14} /> HIDDEN DATA DETECTION
+                <div className="flex items-center gap-3">
+                    <div className="px-3 py-1 rounded bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-mono flex items-center gap-2">
+                        <ImageIcon size={14} /> HIDDEN DATA DETECTION
+                    </div>
+                    <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20">
+                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                        <span className="text-xs font-mono text-green-500">API ONLINE</span>
+                    </div>
                 </div>
             </div>
 

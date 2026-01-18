@@ -20,6 +20,7 @@ import WebDocs from './pages/docs/WebDocs'
 import MalwareDocs from './pages/docs/MalwareDocs'
 import StegDocs from './pages/docs/StegDocs'
 import ReconDocs from './pages/docs/ReconDocs'
+import URLDocs from './pages/docs/URLDocs'
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>
@@ -45,6 +46,7 @@ createRoot(document.getElementById('root')).render(
                     <Route path="malware-analysis" element={<MalwareDocs />} />
                     <Route path="steg-analysis" element={<StegDocs />} />
                     <Route path="recon-analysis" element={<ReconDocs />} />
+                    <Route path="url-analyzer" element={<URLDocs />} />
                 </Route>
             </Routes>
         </BrowserRouter>

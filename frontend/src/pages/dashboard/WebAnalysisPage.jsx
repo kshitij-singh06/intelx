@@ -153,27 +153,33 @@ export default function WebAnalysisPage() {
     return (
         <div className="max-w-7xl mx-auto space-y-6 pb-20">
 
-            {/* Header / Input */}
-            <div className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/10 rounded-xl">
-                <div className="flex items-center gap-4 flex-1">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                <div className="flex items-center gap-4">
                     <Globe className="text-neon-green" size={32} />
                     <div>
                         <h1 className="text-2xl font-bold text-white leading-none">Web Analysis</h1>
                         <div className="text-xs text-foreground/40 font-mono mt-1">ADVANCED INTELLIGENCE SCANNER</div>
                     </div>
                 </div>
-                <div className="flex items-center gap-4 flex-[2]">
-                    <input
-                        value={url}
-                        onChange={e => setUrl(e.target.value)}
-                        onKeyDown={e => e.key === 'Enter' && handleScan()}
-                        placeholder="Enter domain (e.g., instagram.com)"
-                        className="w-full bg-black/50 border border-white/10 rounded px-4 py-2 text-white font-mono focus:border-neon-green/50 outline-none"
-                    />
-                    <Button onClick={handleScan} disabled={loading} className="whitespace-nowrap">
-                        {loading ? 'Scanning...' : 'Run Analysis'}
-                    </Button>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/20">
+                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    <span className="text-xs font-mono text-green-500">API ONLINE</span>
                 </div>
+            </div>
+
+            {/* Input Bar */}
+            <div className="flex items-center gap-4 p-4 bg-white/[0.02] border border-white/10 rounded-xl">
+                <input
+                    value={url}
+                    onChange={e => setUrl(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && handleScan()}
+                    placeholder="Enter domain (e.g., instagram.com)"
+                    className="flex-1 bg-black/50 border border-white/10 rounded px-4 py-2 text-white font-mono focus:border-neon-green/50 outline-none"
+                />
+                <Button onClick={handleScan} disabled={loading} className="whitespace-nowrap">
+                    {loading ? 'Scanning...' : 'Run Analysis'}
+                </Button>
             </div>
 
             {/* Progress Bar */}

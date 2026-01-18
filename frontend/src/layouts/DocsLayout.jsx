@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Outlet, NavLink, Link, useLocation } from 'react-router-dom'
-import { Book, Globe, Bug, Radar, Eye, ArrowLeft, Menu, X, ChevronRight } from 'lucide-react'
+import { Book, Globe, Bug, Radar, Eye, ArrowLeft, Menu, X, ChevronRight, Link2 } from 'lucide-react'
 
 const DocLink = ({ to, icon: Icon, label }) => (
     <NavLink
@@ -66,6 +66,7 @@ export default function DocsLayout() {
                             <DocLink to="/docs/malware-analysis" icon={Bug} label="Malware Analysis" />
                             <DocLink to="/docs/steg-analysis" icon={Eye} label="Steg Analysis" />
                             <DocLink to="/docs/recon-analysis" icon={Radar} label="Recon Analysis" />
+                            <DocLink to="/docs/url-analyzer" icon={Link2} label="URL Analyzer" />
                         </div>
                     </div>
 

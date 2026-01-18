@@ -1,7 +1,7 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { Globe, Bug, Eye, Radar, ArrowRight } from 'lucide-react'
+import { Globe, Bug, Eye, Radar, Link2, ArrowRight } from 'lucide-react'
 
 const tools = [
     {
@@ -72,6 +72,22 @@ const tools = [
         accent: 'purple-400',
         link: '/docs/steg-analysis'
     },
+    {
+        icon: Link2,
+        title: 'URL Analyzer',
+        subtitle: 'Redirect Tracing',
+        description: 'Trace redirect chains and assess link safety by analyzing URL shorteners and suspicious links.',
+        highlight: 'Comprehensive redirect chain analysis',
+        features: [
+            'Multi-hop redirect tracking',
+            'Shortener detection',
+            'Risk assessment scoring',
+            'Final destination analysis',
+        ],
+        gradient: 'from-blue-500/20 via-blue-500/5 to-transparent',
+        accent: 'blue-400',
+        link: '/docs/url-analyzer'
+    },
 ]
 
 export function ToolsOverviewSection() {
@@ -130,7 +146,7 @@ export function ToolsOverviewSection() {
                         Core Capabilities
                     </motion.span>
                     <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground font-mono">
-                        Four Tools.{' '}
+                        Five Tools.{' '}
                         <span className="text-neon-green" style={{ textShadow: '0 0 40px rgba(0, 255, 0, 0.4)' }}>
                             One Platform.
                         </span>
@@ -140,7 +156,7 @@ export function ToolsOverviewSection() {
                     </p>
                 </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
                     {tools.map((tool, index) => (
                         <motion.div
                             key={index}

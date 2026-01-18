@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Button } from '../ui/Button'
-import { Zap, Shield, Search,Eye } from 'lucide-react'
+import { Zap, Shield, Search, Eye, Link2 } from 'lucide-react'
 
 // Animated background component with particles and grid
 function AnimatedBackground() {
@@ -107,7 +107,8 @@ export function HeroSection() {
         { icon: Zap, label: 'Web Analysis', desc: 'Deep website intelligence', link: '/dashboard/web' },
         { icon: Shield, label: 'Malware Analysis', desc: 'Forensic file inspection', link: '/dashboard/malware' },
         { icon: Search, label: 'Recon Analysis', desc: 'Digital footprint tracking', link: '/dashboard/recon' },
-         { icon: Eye, label: 'Steganography Analysis', desc: 'Hidden Data Detection', link: '/dashboard/steg' }
+        { icon: Eye, label: 'Steganography Analysis', desc: 'Hidden Data Detection', link: '/dashboard/steg' },
+        { icon: Link2, label: 'URL Analyzer', desc: 'Redirect chain tracing', link: '/dashboard/url' },
     ]
 
     return (
@@ -204,11 +205,11 @@ export function HeroSection() {
                                 What We Offer
                                 <span className="w-8 h-px bg-gradient-to-l from-transparent to-neon-green" />
                             </h3>
-                            <div className="space-y-4">
+                            <div className="flex flex-col space-y-2">
                                 {offerings.map((item, index) => (
                                     <Link key={index} to={item.link}>
                                         <motion.div
-                                            className="flex items-center gap-4 p-3 rounded-xl bg-background/30 border border-transparent hover:border-neon-green/30 transition-all group mb-4 last:mb-0"
+                                            className="flex items-center gap-4 p-4 rounded-xl bg-background/30 border border-transparent hover:border-neon-green/30 transition-all group"
                                             whileHover={{ x: 8, backgroundColor: 'rgba(0, 255, 0, 0.05)' }}
                                             initial={{ opacity: 0, x: -20 }}
                                             animate={{ opacity: 1, x: 0 }}

@@ -3,11 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
     Link2, ArrowRight, Shield, AlertTriangle, CheckCircle, XCircle,
     Globe, Server, ChevronDown, ChevronUp, Loader2, Clock, ExternalLink,
-    ArrowDownRight, Info
+    ArrowDownRight, Info, Sparkles, X
 } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 
-const API_URL = 'http://localhost:5004/api/url-analyzer/analyze'
+const API_BASE = 'http://localhost:5004/api/url-analyzer'
 
 // ========== HELPER COMPONENTS ==========
 
@@ -124,6 +124,62 @@ const HopCard = ({ hop, isLast }) => {
     )
 }
 
+// AI Summary Modal Component
+const AISummaryModal = ({ isOpen, onClose, summary, loading }) => {
+    if (!isOpen) return null
+
+    return (
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+            onClick={onClose}
+        >
+            <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                className="w-full max-w-2xl max-h-[80vh] bg-[#0a0e17] border border-white/10 rounded-2xl overflow-hidden"
+                onClick={e => e.stopPropagation()}
+            >
+                {/* Modal Header */}
+                <div className="flex items-center justify-between p-4 border-b border-white/10">
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-lg bg-neon-green/10">
+                            <Sparkles size={20} className="text-neon-green" />
+                        </div>
+                        <h3 className="text-lg font-bold text-white">AI Analysis Summary</h3>
+                    </div>
+                    <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-lg transition-colors">
+                        <X size={20} className="text-foreground/60" />
+                    </button>
+                </div>
+
+                {/* Modal Content */}
+                <div className="p-6 overflow-y-auto max-h-[60vh] custom-scrollbar">
+                    {loading ? (
+                        <div className="flex flex-col items-center justify-center py-12 space-y-4">
+                            <Loader2 size={40} className="text-neon-green animate-spin" />
+                            <p className="text-foreground/60 font-mono">Generating AI summary...</p>
+                        </div>
+                    ) : summary ? (
+                        <div className="prose prose-invert max-w-none">
+                            <div className="text-foreground/80 leading-relaxed whitespace-pre-wrap font-mono text-sm">
+                                {summary}
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="text-center py-8 text-foreground/40">
+                            No summary available
+                        </div>
+                    )}
+                </div>
+            </motion.div>
+        </motion.div>
+    )
+}
+
 // ========== MAIN COMPONENT ==========
 
 export default function URLAnalyzerPage() {
@@ -132,14 +188,20 @@ export default function URLAnalyzerPage() {
     const [error, setError] = useState(null)
     const [results, setResults] = useState(null)
 
+    // AI Summary states
+    const [aiModalOpen, setAiModalOpen] = useState(false)
+    const [aiSummary, setAiSummary] = useState(null)
+    const [aiLoading, setAiLoading] = useState(false)
+
     const handleAnalyze = async () => {
         if (!url.trim()) return
         setLoading(true)
         setError(null)
         setResults(null)
+        setAiSummary(null)
 
         try {
-            const res = await fetch(API_URL, {
+            const res = await fetch(`${API_BASE}/analyze`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -156,16 +218,61 @@ export default function URLAnalyzerPage() {
         }
     }
 
+    const handleGenerateAISummary = async () => {
+        if (!results) return
+
+        setAiModalOpen(true)
+        setAiLoading(true)
+
+        try {
+            const res = await fetch(`${API_BASE}/ai-analyze`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    url: results.original_url
+                })
+            })
+            if (!res.ok) throw new Error('Failed to generate summary')
+            const data = await res.json()
+            // Backend returns ai_report field
+            setAiSummary(data.ai_report || data.summary || JSON.stringify(data, null, 2))
+        } catch (e) {
+            setAiSummary(`Error: ${e.message}`)
+        } finally {
+            setAiLoading(false)
+        }
+    }
+
     return (
-        <div className="min-h-screen p-6 lg:p-8 space-y-8">
+        <div className="min-h-screen space-y-8">
+            {/* AI Summary Modal */}
+            <AnimatePresence>
+                {aiModalOpen && (
+                    <AISummaryModal
+                        isOpen={aiModalOpen}
+                        onClose={() => setAiModalOpen(false)}
+                        summary={aiSummary}
+                        loading={aiLoading}
+                    />
+                )}
+            </AnimatePresence>
+
             {/* Header */}
-            <div className="flex items-center gap-4">
-                <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/30">
-                    <Link2 size={28} className="text-blue-400" />
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                    <div className="p-3 rounded-xl bg-neon-green/10 border border-neon-green/30">
+                        <Link2 size={28} className="text-neon-green" />
+                    </div>
+                    <div>
+                        <h1 className="text-2xl font-bold text-white">URL Analyzer</h1>
+                        <p className="text-foreground/60 text-sm">Trace redirects & assess link safety</p>
+                    </div>
                 </div>
-                <div>
-                    <h1 className="text-2xl font-bold text-white">URL Analyzer</h1>
-                    <p className="text-foreground/60 text-sm">Trace redirects & assess link safety</p>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/20">
+                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    <span className="text-xs font-mono text-green-500">API ONLINE</span>
                 </div>
             </div>
 
@@ -181,14 +288,14 @@ export default function URLAnalyzerPage() {
                             onKeyDown={(e) => e.key === 'Enter' && handleAnalyze()}
                             disabled={loading}
                             placeholder="Enter URL to analyze (e.g., https://shorturl.at/abc123)"
-                            className="w-full pl-12 pr-4 py-3 rounded-xl bg-black/50 border border-white/10 text-white placeholder:text-foreground/40 font-mono focus:outline-none focus:border-blue-500/50 disabled:opacity-50"
+                            className="w-full pl-12 pr-4 py-3 rounded-xl bg-black/50 border border-white/10 text-white placeholder:text-foreground/40 font-mono focus:outline-none focus:border-neon-green/50 disabled:opacity-50"
                         />
                     </div>
                     <Button
                         onClick={handleAnalyze}
                         disabled={loading || !url.trim()}
                         variant="primary"
-                        className="px-6 py-3 font-mono bg-blue-500 hover:bg-blue-600"
+                        className="px-6 py-3 font-mono"
                     >
                         {loading ? (
                             <><Loader2 size={18} className="animate-spin mr-2" /> Analyzing...</>
@@ -218,7 +325,7 @@ export default function URLAnalyzerPage() {
                         animate={{ rotate: 360 }}
                         transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
                     >
-                        <Link2 size={48} className="text-blue-400" />
+                        <Link2 size={48} className="text-neon-green" />
                     </motion.div>
                     <p className="text-foreground/60 font-mono">Following redirect chain...</p>
                 </div>
@@ -256,8 +363,8 @@ export default function URLAnalyzerPage() {
                             <div className="flex flex-col items-end gap-3">
                                 <RiskBadge level={results.risk_assessment?.level} score={results.risk_assessment?.score} />
                                 <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono ${results.is_safe
-                                        ? 'bg-green-500/10 text-green-400 border border-green-500/30'
-                                        : 'bg-red-500/10 text-red-400 border border-red-500/30'
+                                    ? 'bg-green-500/10 text-green-400 border border-green-500/30'
+                                    : 'bg-red-500/10 text-red-400 border border-red-500/30'
                                     }`}>
                                     {results.is_safe ? <CheckCircle size={14} /> : <XCircle size={14} />}
                                     {results.is_safe ? 'SAFE' : 'POTENTIALLY UNSAFE'}
@@ -307,7 +414,7 @@ export default function URLAnalyzerPage() {
                     )}
 
                     {/* Redirect Chain */}
-                    <ResultCard title={`Redirect Chain (${results.redirect_chain?.length || 0} hops)`} icon={ArrowRight} color="blue-400">
+                    <ResultCard title={`Redirect Chain (${results.redirect_chain?.length || 0} hops)`} icon={ArrowRight} color="neon-green">
                         <div className="space-y-6">
                             {results.redirect_chain?.map((hop, i) => (
                                 <HopCard key={i} hop={hop} isLast={i === results.redirect_chain.length - 1} />
@@ -317,20 +424,38 @@ export default function URLAnalyzerPage() {
 
                     {/* Limitations */}
                     {results.limitations && results.limitations.length > 0 && (
-                        <div className="p-4 rounded-xl bg-blue-500/5 border border-blue-500/20">
+                        <div className="p-4 rounded-xl bg-neon-green/5 border border-neon-green/20">
                             <div className="flex items-start gap-3">
-                                <Info size={18} className="text-blue-400 mt-0.5 shrink-0" />
-                                <div className="text-sm text-blue-300/80">
+                                <Info size={18} className="text-neon-green mt-0.5 shrink-0" />
+                                <div className="text-sm text-neon-green/80">
                                     <strong>Analysis Limitations:</strong>
-                                    <ul className="list-disc pl-4 mt-1 space-y-1 text-blue-300/60">
+                                    <ul className="list-disc pl-4 mt-1 space-y-1 text-neon-green/60">
                                         {results.limitations.map((lim, i) => <li key={i}>{lim}</li>)}
                                     </ul>
                                 </div>
                             </div>
                         </div>
                     )}
+
+                    {/* Generate AI Summary Button */}
+                    <div className="flex justify-end">
+                        <Button
+                            onClick={handleGenerateAISummary}
+                            variant="outline"
+                            className="flex items-center gap-2"
+                            disabled={aiLoading}
+                        >
+                            {aiLoading ? (
+                                <Loader2 size={16} className="animate-spin" />
+                            ) : (
+                                <Sparkles size={16} className="text-neon-green" />
+                            )}
+                            Generate AI Summary
+                        </Button>
+                    </div>
                 </motion.div>
             )}
         </div>
     )
 }
+

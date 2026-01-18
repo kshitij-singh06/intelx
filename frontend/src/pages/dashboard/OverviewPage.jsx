@@ -57,8 +57,8 @@ export default function OverviewPage() {
                 </div>
             </div>
 
-            {/* Quick Actions Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            {/* Quick Actions Grid - First Row (3 cards) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <QuickActionCard
                     title="Web Analysis"
                     description="Scan for vulnerabilities, headers, DNS."
@@ -80,20 +80,28 @@ export default function OverviewPage() {
                     to="/dashboard/recon"
                     color="neon-yellow"
                 />
-                <QuickActionCard
-                    title="Steg Analysis"
-                    description="Detect hidden data in files."
-                    icon={Eye}
-                    to="/dashboard/steg"
-                    color="purple-500"
-                />
-                <QuickActionCard
-                    title="URL Analyzer"
-                    description="Trace redirects & assess safety."
-                    icon={Link2}
-                    to="/dashboard/url"
-                    color="blue-500"
-                />
+            </div>
+
+            {/* Quick Actions Grid - Second Row (2 centered cards) */}
+            <div className="flex justify-center gap-4">
+                <div className="w-full max-w-sm">
+                    <QuickActionCard
+                        title="Steg Analysis"
+                        description="Detect hidden data in files."
+                        icon={Eye}
+                        to="/dashboard/steg"
+                        color="purple-500"
+                    />
+                </div>
+                <div className="w-full max-w-sm">
+                    <QuickActionCard
+                        title="URL Analyzer"
+                        description="Trace redirects & assess safety."
+                        icon={Link2}
+                        to="/dashboard/url"
+                        color="blue-500"
+                    />
+                </div>
             </div>
         </div>
     )

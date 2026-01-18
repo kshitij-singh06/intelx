@@ -4,15 +4,15 @@ import { Check, Github, Rocket, Code } from 'lucide-react'
 
 const features = [
     // Column 1
-    ['Archive History', 'Block List Check', 'Carbon Footprint', 'Cookies', 'DNS Server', 'DNS Records','Reverse Engineering'],
+    ['Archive History', 'Block List Check', 'Carbon Footprint', 'Cookies', 'DNS Server', 'DNS Records', 'Reverse Engineering', 'File Hash Analysis', 'API Key Detection', 'Redirect Chains'],
     // Column 2
-    ['DNSSEC', 'Site Features', 'Firewall Types', 'Get IP Address', 'Headers', 'HSTS', 'HTTP Security'],
+    ['DNSSEC', 'Site Features', 'Firewall Types', 'Get IP Address', 'Headers', 'HSTS', 'HTTP Security', 'Username OSINT', 'Email Breach Check', 'Phone Validation'],
     // Column 3
-    ['Linked Pages', 'Mail Config', 'Open Ports', 'Quality Check', 'Global Rank', 'Redirects', 'Robots.txt'],
+    ['Linked Pages', 'Mail Config', 'Open Ports', 'Quality Check', 'Global Rank', 'Redirects', 'Robots.txt', 'Steghide Detection', 'Binwalk Extraction', 'EXIF Metadata'],
     // Column 4
-    ['Screenshot', 'Security.txt', 'Sitemap', 'Social Tags', 'SSL Certificate', 'Uptime Status', 'Tech Stack'],
+    ['Screenshot', 'Security.txt', 'Sitemap', 'Social Tags', 'SSL Certificate', 'Uptime Status', 'Tech Stack', 'TOR Exit Detection', 'Blacklist Check', 'Threat Intelligence'],
     // Column 5
-    ['Known Threats', 'TLS Version', 'Trace Route', 'TXT Records', 'Whois Lookup'],
+    ['Known Threats', 'TLS Version', 'Trace Route', 'TXT Records', 'Whois Lookup', 'VirusTotal Scan', 'Sandbox Analysis', 'Ghidra Decompile', 'Flow Diagrams', 'AI Summary'],
 ]
 
 export function FeaturesHighlightSection() {
@@ -53,7 +53,7 @@ export function FeaturesHighlightSection() {
                 {/* Header */}
                 <motion.div className="text-center mb-12" variants={itemVariants}>
                     <p className="text-lg md:text-xl text-foreground/80">
-                        With over <span className="text-neon-green font-bold">30 supported checks</span> you can view and analyse key
+                        With over <span className="text-neon-green font-bold">50 supported checks</span> you can view and analyse key
                     </p>
                     <p className="text-lg md:text-xl text-foreground/80">
                         information in an instant
@@ -66,7 +66,7 @@ export function FeaturesHighlightSection() {
                     variants={itemVariants}
                 />
 
-                {/* Features grid - 5 columns */}
+                {/* Features grid - 5 columns, responsive with fewer features on mobile */}
                 <motion.div
                     className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-8 gap-y-3 mb-12"
                     variants={containerVariants}
@@ -77,7 +77,8 @@ export function FeaturesHighlightSection() {
                                 <motion.div
                                     key={featureIndex}
                                     variants={itemVariants}
-                                    className="flex items-center gap-2 group cursor-pointer"
+                                    className={`flex items-center gap-2 group cursor-pointer ${featureIndex >= 5 ? 'hidden md:flex' : ''
+                                        } ${featureIndex >= 7 ? 'hidden lg:flex' : ''}`}
                                     whileHover={{ x: 4 }}
                                 >
                                     <Check
@@ -91,19 +92,9 @@ export function FeaturesHighlightSection() {
                             ))}
                         </div>
                     ))}
-
-                    {/* "+ More" item in last column */}
-                    {/* <motion.div
-                        variants={itemVariants}
-                        className="flex items-center gap-2 cursor-pointer group lg:col-start-5"
-                        whileHover={{ x: 4 }}
-                    >
-                        <span className="text-neon-green font-bold text-sm group-hover:text-neon-yellow transition-colors">
-                            + More
-                        </span>
-                    </motion.div> */}
                 </motion.div>
             </motion.div>
         </section>
     )
 }
+

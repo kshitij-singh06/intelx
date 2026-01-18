@@ -95,12 +95,13 @@ export function OpenSourceSection() {
                 {/* GitHub stats cards */}
                 <motion.div variants={itemVariants} className="flex flex-wrap justify-center gap-4 mb-12">
                     {[
-                        { icon: Star, label: 'Star on GitHub', value: 'Show Support' },
-                        { icon: GitFork, label: 'Fork & Contribute', value: 'Join Us' },
-                        { icon: ExternalLink, label: 'Documentation', value: 'Learn More' },
+                        { icon: Star, label: 'Star on GitHub', value: 'Show Support', link: null },
+                        { icon: GitFork, label: 'Fork & Contribute', value: 'Join Us', link: null },
+                        { icon: ExternalLink, label: 'Documentation', value: 'Learn More', link: '/docs' },
                     ].map((item, i) => (
                         <motion.button
                             key={i}
+                            onClick={() => item.link && (window.location.href = item.link)}
                             className="flex items-center gap-3 px-6 py-4 rounded-xl border border-foreground/10 bg-foreground/5 hover:bg-foreground/10 hover:border-neon-green/30 transition-all group"
                             whileHover={{ y: -4, scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}

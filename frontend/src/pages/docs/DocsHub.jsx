@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { Globe, Bug, Eye, Radar, ArrowRight, BookOpen } from 'lucide-react'
+import { Globe, Bug, Eye, Radar, ArrowRight, BookOpen, Link2 } from 'lucide-react'
 
 const tools = [
     {
@@ -30,6 +30,13 @@ const tools = [
         desc: 'OSINT gathering and digital footprint investigation.',
         link: '/docs/recon-analysis',
         color: 'neon-yellow'
+    },
+    {
+        icon: Link2,
+        title: 'URL Analyzer',
+        desc: 'Trace redirect chains and assess link safety for suspicious URLs.',
+        link: '/docs/url-analyzer',
+        color: 'blue-400'
     }
 ]
 
