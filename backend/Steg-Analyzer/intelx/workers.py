@@ -7,11 +7,7 @@ import threading
 from pathlib import Path
 from typing import Any
 
-import sentry_sdk
 
-from .utils.sentry import initialize_sentry
-
-initialize_sentry()
 
 from .analyzers.binwalk import analyze_binwalk  # pylint: disable=C0413
 from .analyzers.color_remapping import analyze_color_remapping
@@ -66,9 +62,7 @@ def analyze_image(submission_hash: str) -> None:
         image = Image.query.get_or_404(submission.image_hash)  # type: ignore
 
         if not submission or not image:  # No submission found
-            sentry_sdk.capture_message(
-                f"Submission or image not found: {submission_hash}", level="warning"
-            )
+            print(f"Submission or image not found: {submission_hash}")
             return
 
         submission.status = "running"  # type: ignore
@@ -88,21 +82,6 @@ def analyze_image(submission_hash: str) -> None:
                     analyzer_func(*args)
                 except Exception as e:
                     print(f"Error in {analyzer_name}: {e}")
-                    with sentry_sdk.push_scope() as scope:
-                        scope.set_tag("analyzer", analyzer_name)
-                        scope.set_tag("submission_hash", submission_hash)
-                        scope.set_context(
-                            "analyzer_info",
-                            {
-                                "tool": analyzer_name,
-                                "image_path": str(img_path),
-                                "result_path": str(result_path),
-                                "filename": submission.filename,
-                                "deep_analysis": submission.deep_analysis,
-                            },
-                        )
-                        scope.fingerprint = ["analyzer-error", analyzer_name]
-                        sentry_sdk.capture_exception(e)
 
             analyzers = [
                 (analyze_binwalk, img_path, result_path),
@@ -140,9 +119,7 @@ def analyze_image(submission_hash: str) -> None:
 
             submission.status = "completed"  # type: ignore
         except Exception as e:
-            sentry_sdk.capture_exception(e)
+            print(f"Error during analysis: {e}")
             submission.status = "error"  # type: ignore
         finally:
             db.session.commit()  # pylint: disable=no-member
-            # Flush Sentry events - wait up to 5 seconds for events to be sent
-            sentry_sdk.flush(timeout=5)
