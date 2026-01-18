@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any, Optional
 
 import sentry_sdk
-from flask import Flask, Response, abort, jsonify, render_template, request, send_file
+from flask import Blueprint, Flask, Response, abort, jsonify, render_template, request, send_file
 from redis import Redis
 from rq import Queue
 
@@ -41,6 +41,8 @@ def create_app() -> Flask:
     app.config["REDIS_QUEUE"] = Queue(connection=Redis(host="redis", port=6379))
     db.init_app(app)
 
+    bp = Blueprint('api', __name__, url_prefix='/api/steg-analyzer')
+
     @app.errorhandler(413)
     def too_large(_: Any) -> tuple[Response, int]:
         """Error Handler for Max File Size."""
@@ -55,39 +57,16 @@ def create_app() -> Flask:
         return jsonify({"error": "Image size exceeded"}), 413
 
     @app.errorhandler(404)
-    def not_found(_: Any) -> str:
+    def not_found(_: Any) -> tuple[Response, int]:
         """Error Handler for 404 not found."""
-        return render_template("error.html", message="Resource not found", statuscode=404)
+        return jsonify({"error": "Resource not found"}), 404
 
-    @app.route("/")
-    def index() -> str:
-        """Render the main index page."""
-        return render_template("index.html")
+    @bp.route("/")
+    def index() -> tuple[Response, int]:
+        """Root endpoint."""
+        return jsonify({"message": "IntelX Steg-Analyzer Backend is running"}), 200
 
-    @app.route("/faq")
-    def faq() -> str:
-        """Render the FAQ page."""
-        return render_template("faq.html")
-
-    @app.route("/show")
-    def show() -> str:
-        """Show all active submissions."""
-        db_images = Image.query.all()
-        images = []
-        for img in db_images:
-            last_sub = img.submissions[-1]
-            images.append({"file": f"/image/{img.hash}", "link": f"/{last_sub.hash}"})
-        return render_template("show.html", images=images)
-
-    @app.route("/<hash_val>", methods=["GET"])
-    def result_page(hash_val: str) -> str:
-        """Render the result page for a given submission hash."""
-        submission = Submission.query.get_or_404(hash_val)  # type: ignore
-        Image.query.get_or_404(submission.image_hash)  # type: ignore
-
-        return render_template("result.html", hash_val=hash_val)
-
-    @app.route("/upload", methods=["POST"])
+    @bp.route("/upload", methods=["POST"])
     def upload_image() -> tuple[Response, int]:
         """Handle image upload and initiate analysis."""
 
@@ -202,13 +181,13 @@ def create_app() -> Flask:
         # Return submission identifier
         return jsonify({"submission_hash": submission.hash}), 200
 
-    @app.route("/status/<hash_val>", methods=["GET"])
+    @bp.route("/status/<hash_val>", methods=["GET"])
     def get_status(hash_val: str) -> Response:
         """Get the processing status of a submission."""
         submission = Submission.query.get_or_404(hash_val)  # type: ignore
         return jsonify({"status": submission.status})  # type: ignore
 
-    @app.route("/infos/<hash_val>", methods=["GET"])
+    @bp.route("/infos/<hash_val>", methods=["GET"])
     def get_infos(hash_val: str) -> Response:
         """Get the metadata and information of a submission."""
         submission = Submission.query.get_or_404(hash_val)
@@ -229,7 +208,7 @@ def create_app() -> Flask:
             }
         )  # type: ignore
 
-    @app.route("/result/<hash_val>", methods=["GET"])
+    @bp.route("/result/<hash_val>", methods=["GET"])
     def get_result(hash_val: str) -> tuple[Response, int]:
         """Get the analysis results of a submission."""
         submission = Submission.query.get_or_404(hash_val)
@@ -245,7 +224,7 @@ def create_app() -> Flask:
 
         return jsonify({"results": results}), 200
 
-    @app.route("/download/<hash_val>/<tool>")
+    @bp.route("/download/<hash_val>/<tool>")
     def download_output(hash_val: str, tool: str) -> Response:
         """Download the output of a specific analyzer for a given submission hash."""
 
@@ -260,7 +239,7 @@ def create_app() -> Flask:
 
         return send_file(output_file, as_attachment=True)
 
-    @app.route("/remove/<hash_val>", methods=["POST"])
+    @bp.route("/remove/<hash_val>", methods=["POST"])
     def remove_image(hash_val: str) -> tuple[Response, int]:
         """Remove an image and associated results if criteria are met."""
 
@@ -346,7 +325,7 @@ def create_app() -> Flask:
 
         return jsonify({"message": "Image successfully removed"}), 200
 
-    @app.route("/remove_password/<hash_val>", methods=["POST"])
+    @bp.route("/remove_password/<hash_val>", methods=["POST"])
     def remove_password(hash_val: str) -> tuple[Response, int]:
         """Remove a password from a submission if criteria are met."""
 
@@ -400,8 +379,8 @@ def create_app() -> Flask:
 
         return jsonify({"message": "Password successfully removed"}), 200
 
-    @app.route("/image/<img_name>")
-    @app.route("/image/<hash_val>/<img_name>")
+    @bp.route("/image/<img_name>")
+    @bp.route("/image/<hash_val>/<img_name>")
     def get_image(hash_val: Optional[str] = None, img_name: Optional[str] = None) -> Response:
         """
         Download the image with a specific name (usually ones generated with
@@ -426,6 +405,8 @@ def create_app() -> Flask:
             return abort(404, description="Image not found or unsupported format")
 
         return send_file(output_file, as_attachment=True)
+
+    app.register_blueprint(bp)
 
     return app
 
