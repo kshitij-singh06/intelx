@@ -22,8 +22,8 @@ logger = logging.getLogger(__name__)
 # Create Flask app
 app = Flask(__name__)
 
-# Enable CORS
-CORS(app, origins=os.getenv('API_CORS_ORIGIN', '*'))
+# Enable CORS - allow all origins for API access
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 # Configuration
 app.config['JSON_SORT_KEYS'] = False
