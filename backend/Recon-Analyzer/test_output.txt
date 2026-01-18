@@ -1,0 +1,294 @@
+============================================================
+        ReconGraph Test Output
+        Generated: Sun Jan 18 01:03:39 AM IST 2026
+============================================================
+
+=== TEST 1: Scan 8.8.8.8 ===
+
+============================================================
+        ReconGraph - CLI Mode
+============================================================
+
+============================================================
+  SCAN: 8.8.8.8
+============================================================
+
+
+[+] IP API Info...
+2026-01-17 19:33:40,634 - __main__ - INFO - Detected IP address: 8.8.8.8
+2026-01-17 19:33:40,634 - attack.ipapi - INFO - Fetching IP info for 8.8.8.8
+2026-01-17 19:33:48,308 - attack.ipapi - INFO - IP info retrieved successfully for 8.8.8.8
+{
+  "ip_info": [
+    {
+      "status": "success",
+      "country": "United States",
+      "countryCode": "US",
+      "region": "VA",
+      "regionName": "Virginia",
+      "city": "Ashburn",
+      "zip": "20149",
+      "timezone": "America/New_York",
+      "isp": "Google LLC",
+      "org": "Google Public DNS",
+      "as": "AS15169 Google LLC"
+    }
+  ],
+  "dns_info": {
+    "dns": {
+      "geo": "India - Google LLC",
+      "ip": "172.253.220.28"
+    },
+    "edns": {
+      "geo": "India - BSNL Internet",
+      "ip": "117.250.240.0"
+    }
+  }
+}
+
+[+] Talos Blacklist Check...
+{
+  "blacklisted": false
+}
+
+[+] Tor Exit Node Check...
+{
+  "is_tor_exit": false
+}
+
+============================================================
+  SCAN COMPLETE
+============================================================
+
+
+=== TEST 2: Scan 1.1.1.1 ===
+
+============================================================
+        ReconGraph - CLI Mode
+============================================================
+
+============================================================
+  SCAN: 1.1.1.1
+============================================================
+
+
+[+] IP API Info...
+2026-01-17 19:33:50,140 - __main__ - INFO - Detected IP address: 1.1.1.1
+2026-01-17 19:33:50,140 - attack.ipapi - INFO - Fetching IP info for 1.1.1.1
+2026-01-17 19:33:52,908 - attack.ipapi - INFO - IP info retrieved successfully for 1.1.1.1
+{
+  "ip_info": [
+    {
+      "status": "success",
+      "country": "Hong Kong",
+      "countryCode": "HK",
+      "region": "HCW",
+      "regionName": "Central and Western District",
+      "city": "Hong Kong",
+      "zip": "",
+      "timezone": "Asia/Hong_Kong",
+      "isp": "Cloudflare, Inc",
+      "org": "APNIC and Cloudflare DNS Resolver project",
+      "as": "AS13335 Cloudflare, Inc."
+    }
+  ],
+  "dns_info": {
+    "dns": {
+      "geo": "India - Google LLC",
+      "ip": "172.217.34.209"
+    },
+    "edns": {
+      "geo": "India - BSNL Internet",
+      "ip": "117.250.240.0"
+    }
+  }
+}
+
+[+] Talos Blacklist Check...
+{
+  "blacklisted": false
+}
+
+[+] Tor Exit Node Check...
+{
+  "is_tor_exit": false
+}
+
+============================================================
+  SCAN COMPLETE
+============================================================
+
+
+=== TEST 3: Scan google.com ===
+
+============================================================
+        ReconGraph - CLI Mode
+============================================================
+
+============================================================
+  SCAN: google.com
+============================================================
+
+
+[+] IP API Info...
+2026-01-17 19:33:54,668 - __main__ - INFO - Detected domain: google.com -> IP: 142.250.183.174
+2026-01-17 19:33:54,668 - attack.ipapi - INFO - Fetching IP info for 142.250.183.174
+2026-01-17 19:33:57,442 - attack.ipapi - INFO - IP info retrieved successfully for 142.250.183.174
+{
+  "ip_info": [
+    {
+      "status": "success",
+      "country": "India",
+      "countryCode": "IN",
+      "region": "MH",
+      "regionName": "Maharashtra",
+      "city": "Mumbai",
+      "zip": "400001",
+      "timezone": "Asia/Kolkata",
+      "isp": "Google LLC",
+      "org": "Google LLC",
+      "as": "AS15169 Google LLC"
+    }
+  ],
+  "dns_info": {
+    "dns": {
+      "geo": "India - Google LLC",
+      "ip": "172.253.211.210"
+    },
+    "edns": {
+      "geo": "India - BSNL Internet",
+      "ip": "117.250.240.0"
+    }
+  }
+}
+
+[+] Talos Blacklist Check...
+{
+  "blacklisted": false
+}
+
+[+] Tor Exit Node Check...
+{
+  "is_tor_exit": false
+}
+
+[+] Tranco Ranking...
+2026-01-17 19:33:57,450 - attack.tranco - INFO - Checking Tranco ranking for: google.com
+2026-01-17 19:33:58,378 - attack.tranco - INFO - Tranco rank for google.com: 1
+{
+  "found": true,
+  "rank": 1
+}
+
+[+] ThreatFox IOC Check...
+2026-01-17 19:33:58,381 - attack.threatfox - INFO - Querying ThreatFox for: google.com
+2026-01-17 19:33:59,714 - attack.threatfox - ERROR - ThreatFox API returned status code 401
+{
+  "found": false,
+  "error": "API returned status 401"
+}
+
+============================================================
+  SCAN COMPLETE
+============================================================
+
+
+=== TEST 4: Footprint ClstDegen ===
+
+============================================================
+        ReconGraph - CLI Mode
+============================================================
+
+============================================================
+  FOOTPRINT: ClstDegen
+============================================================
+
+[+] Username Search...
+  Searching for 'ClstDegen' across platforms...
+
+2026-01-17 19:34:01,742 - osint.username - INFO - Starting username search for: ClstDegen
+2026-01-17 19:34:17,012 - osint.username - INFO - Username search complete. Found on 2 sites.
+  Found on 2 site(s):
+
+  ✓ Spotify: https://open.spotify.com/user/ClstDegen
+  ✓ DeviantArt: https://ClstDegen.deviantart.com
+
+============================================================
+  FOOTPRINT COMPLETE
+============================================================
+
+
+=== TEST 5: Footprint defcon ===
+
+============================================================
+        ReconGraph - CLI Mode
+============================================================
+
+============================================================
+  FOOTPRINT: defcon
+============================================================
+
+[+] Username Search...
+  Searching for 'defcon' across platforms...
+
+2026-01-17 19:34:19,138 - osint.username - INFO - Starting username search for: defcon
+2026-01-17 19:34:34,369 - osint.username - INFO - Username search complete. Found on 48 sites.
+  Found on 48 site(s):
+
+  ✓ Spotify: https://open.spotify.com/user/defcon
+  ✓ Slack: https://defcon.slack.com
+  ✓ Bitbucket: https://bitbucket.org/defcon
+  ✓ YouTube: https://www.youtube.com/defcon
+  ✓ YouPic: https://youpic.com/photographer/defcon
+  ✓ Geocaching: https://www.geocaching.com/p/default.aspx?u=defcon
+  ✓ Disqus: https://disqus.com/by/defcon
+  ✓ Tumblr: https://defcon.tumblr.com/
+  ✓ GitLab: https://gitlab.com/defcon
+  ✓ Fur Affinity: https://www.furaffinity.net/user/defcon
+  ✓ HubPages: https://hubpages.com/@defcon
+  ✓ Wattpad: https://www.wattpad.com/user/defcon
+  ✓ WordPress: https://defcon.wordpress.com
+  ✓ Pastebin: https://pastebin.com/u/defcon
+  ✓ Periscope: https://www.periscope.tv/defcon
+  ✓ Keybase: https://keybase.io/defcon
+  ✓ Scratch: https://scratch.mit.edu/users/defcon
+  ✓ MyAnimeList: https://myanimelist.net/profile/defcon
+  ✓ Instructables: https://www.instructables.com/member/defcon
+  ✓ Vimeo: https://vimeo.com/defcon
+  ✓ Codecademy: https://www.codecademy.com/profiles/defcon
+  ✓ SoundCloud: https://soundcloud.com/defcon
+  ✓ GitHub Gist: https://gist.github.com/defcon
+  ✓ SpeakerDeck: https://speakerdeck.com/defcon
+  ✓ ThemeForest: https://themeforest.net/user/defcon
+  ✓ Mydramalist: https://www.mydramalist.com/profile/defcon
+  ✓ Apple Discussions: https://discussions.apple.com/profile/defcon
+  ✓ WordPressOrg: https://profiles.wordpress.org/defcon
+  ✓ Letterboxd: https://letterboxd.com/defcon
+  ✓ ProductHunt: https://www.producthunt.com/@defcon
+  ✓ TradingView: https://www.tradingview.com/u/defcon
+  ✓ Snapchat: https://www.snapchat.com/add/defcon
+  ✓ Goodreads: https://www.goodreads.com/defcon
+  ✓ ReverbNation: https://www.reverbnation.com/defcon
+  ✓ Rumble: https://rumble.com/user/defcon
+  ✓ Hackaday: https://hackaday.io/defcon
+  ✓ GitHub: https://www.github.com/defcon
+  ✓ Flickr: https://www.flickr.com/people/defcon
+  ✓ Venmo: https://account.venmo.com/u/defcon
+  ✓ DeviantArt: https://defcon.deviantart.com
+  ✓ BuyMeACoffee: https://www.buymeacoffee.com/defcon
+  ✓ HackerRank: https://hackerrank.com/defcon
+  ✓ Reddit: https://www.reddit.com/user/defcon
+  ✓ Last.fm: https://www.last.fm/user/defcon
+  ✓ Scribd: https://www.scribd.com/defcon
+  ✓ Bandcamp: https://bandcamp.com/defcon
+  ✓ Freelancer: https://www.freelancer.com/u/defcon
+  ✓ Houzz: https://houzz.com/user/defcon
+
+============================================================
+  FOOTPRINT COMPLETE
+============================================================
+
+
+============================================================
+        ALL TESTS COMPLETE
+============================================================
