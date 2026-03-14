@@ -12,7 +12,6 @@ services:
     container_name: malware-analyzer
     ports:
       - "5000:5000"
-    command: python main.py
     env_file:
       - ./.env
     environment:
@@ -31,9 +30,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 4G
+          memory: 1536M
         reservations:
-          memory: 1G
+          memory: 256M
     networks:
       - intelx-network
 
@@ -46,7 +45,6 @@ services:
       dockerfile: Dockerfile
     container_name: steg-analyzer
     restart: always
-    command: ["flask", "--app", "intelx.app", "run", "--host=0.0.0.0", "--port=5000"]
     ports:
       - "5002:5000"
     volumes:
@@ -145,7 +143,7 @@ services:
   recon-analyzer:
     build:
       context: ./Recon-Analyzer
-      dockerfile: DockerFile
+      dockerfile: Dockerfile
     container_name: recon-analyzer
     ports:
       - "5003:5000"
@@ -209,7 +207,6 @@ services:
       - API_ENABLE_RATE_LIMIT=false
     volumes:
       - ./Web-Analyzer:/app
-    command: python run.py
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/"]
