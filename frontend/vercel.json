@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    { "source": "/api/malware-analyzer/:path*", "destination": "http://@BACKEND_IP:5000/api/malware-analyzer/:path*" },
+    { "source": "/api/web-analyzer/:path*", "destination": "http://@BACKEND_IP:5001/api/web-analyzer/:path*" },
+    { "source": "/api/steg-analyzer/:path*", "destination": "http://@BACKEND_IP:5002/api/steg-analyzer/:path*" },
+    { "source": "/api/Recon-Analyzer/:path*", "destination": "http://@BACKEND_IP:5003/api/Recon-Analyzer/:path*" },
+    { "source": "/api/url-analyzer/:path*", "destination": "http://@BACKEND_IP:5004/api/url-analyzer/:path*" }
+  ]
+}

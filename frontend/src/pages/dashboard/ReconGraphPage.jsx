@@ -8,7 +8,7 @@ import {
 import { Button } from '../../components/ui/Button'
 
 
-const API_BASE = `${import.meta.env.VITE_API_BASE_URL}:5003/api/Recon-Analyzer`
+const API_BASE = '/api/Recon-Analyzer'
 
 // ========== HELPER COMPONENTS ==========
 

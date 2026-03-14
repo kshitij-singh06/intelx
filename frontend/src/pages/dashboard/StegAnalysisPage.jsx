@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Upload, FileImage, ShieldAlert, ImageIcon, Terminal, Activity, Eye, Download, AlertTriangle, CheckCircle, XCircle, ChevronDown, ChevronUp, Lock, Loader2 } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 
-const API_BASE = `${import.meta.env.VITE_API_BASE_URL}:5002/api/steg-analyzer`
+const API_BASE = '/api/steg-analyzer'
 const TerminalLine = ({ text, delay = 0, color = 'text-foreground/70' }) => (
     <motion.div
         initial={{ opacity: 0, x: -10 }}

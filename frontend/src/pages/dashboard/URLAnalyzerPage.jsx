@@ -8,7 +8,7 @@ import {
 import { Button } from '../../components/ui/Button'
 
 
-const API_BASE = `${import.meta.env.VITE_API_BASE_URL}:5004/api/url-analyzer`
+const API_BASE = '/api/url-analyzer'
 // ========== HELPER COMPONENTS ==========
 
 const RiskBadge = ({ level, score }) => {
