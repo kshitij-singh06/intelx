@@ -7,8 +7,8 @@ import {
 } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 
-const API_BASE = 'http://localhost:5004/api/url-analyzer'
 
+const API_BASE = `${import.meta.env.VITE_API_BASE_URL}:5004/api/url-analyzer`
 // ========== HELPER COMPONENTS ==========
 
 const RiskBadge = ({ level, score }) => {
