@@ -36,7 +36,7 @@ class AIAnalyzer:
 
             # Generate content using Gemini
             response = self.client.models.generate_content(
-                model="gemini-3.0-flash",
+                model="gemini-2.5-flash-lite",
                 contents=prompt,
             )
 

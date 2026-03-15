@@ -1,5 +1,8 @@
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import {
     Link2, ArrowRight, Shield, AlertTriangle, CheckCircle, XCircle,
     Globe, Server, ChevronDown, ChevronUp, Loader2, Clock, ExternalLink,
@@ -124,59 +127,102 @@ const HopCard = ({ hop, isLast }) => {
     )
 }
 
-// AI Summary Modal Component
-const AISummaryModal = ({ isOpen, onClose, summary, loading }) => {
+// AI Summary Modal Component — uses portal to escape sidebar stacking context
+const AISummaryModal = ({ isOpen, onClose, summary, loading, isError }) => {
     if (!isOpen) return null
 
-    return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
-            onClick={onClose}
-        >
+    return createPortal(
+        <AnimatePresence>
             <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                className="w-full max-w-2xl max-h-[80vh] bg-[#0a0e17] border border-white/10 rounded-2xl overflow-hidden"
-                onClick={e => e.stopPropagation()}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+                onClick={onClose}
             >
-                {/* Modal Header */}
-                <div className="flex items-center justify-between p-4 border-b border-white/10">
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-neon-green/10">
-                            <Sparkles size={20} className="text-neon-green" />
-                        </div>
-                        <h3 className="text-lg font-bold text-white">AI Analysis Summary</h3>
-                    </div>
-                    <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-lg transition-colors">
-                        <X size={20} className="text-foreground/60" />
-                    </button>
-                </div>
-
-                {/* Modal Content */}
-                <div className="p-6 overflow-y-auto max-h-[60vh] custom-scrollbar">
-                    {loading ? (
-                        <div className="flex flex-col items-center justify-center py-12 space-y-4">
-                            <Loader2 size={40} className="text-neon-green animate-spin" />
-                            <p className="text-foreground/60 font-mono">Generating AI summary...</p>
-                        </div>
-                    ) : summary ? (
-                        <div className="prose prose-invert max-w-none">
-                            <div className="text-foreground/80 leading-relaxed whitespace-pre-wrap font-mono text-sm">
-                                {summary}
+                <motion.div
+                    initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                    animate={{ scale: 1, opacity: 1, y: 0 }}
+                    exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                    transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                    className="w-full max-w-2xl max-h-[80vh] bg-[#0a0e17] border border-white/10 rounded-2xl overflow-hidden shadow-2xl shadow-black/50"
+                    onClick={e => e.stopPropagation()}
+                >
+                    {/* Modal Header */}
+                    <div className="flex items-center justify-between p-5 border-b border-white/10 bg-gradient-to-r from-neon-green/5 to-transparent">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2.5 rounded-xl bg-neon-green/10 border border-neon-green/20">
+                                <Sparkles size={20} className="text-neon-green" />
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-bold text-white">AI Analysis Summary</h3>
+                                <p className="text-xs text-foreground/40 font-mono">Secured & Powered by Gemini</p>
                             </div>
                         </div>
-                    ) : (
-                        <div className="text-center py-8 text-foreground/40">
-                            No summary available
-                        </div>
-                    )}
-                </div>
+                        <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-lg transition-colors">
+                            <X size={20} className="text-foreground/60" />
+                        </button>
+                    </div>
+
+                    {/* Modal Content */}
+                    <div className="p-6 overflow-y-auto max-h-[60vh] custom-scrollbar">
+                        {loading ? (
+                            <div className="flex flex-col items-center justify-center py-16 space-y-4">
+                                <div className="relative">
+                                    <div className="absolute inset-0 rounded-full bg-neon-green/20 blur-xl animate-pulse" />
+                                    <Loader2 size={40} className="text-neon-green animate-spin relative" />
+                                </div>
+                                <p className="text-foreground/60 font-mono text-sm">Generating AI summary...</p>
+                                <p className="text-foreground/30 font-mono text-xs">This may take a few seconds</p>
+                            </div>
+                        ) : isError ? (
+                            <div className="flex flex-col items-center justify-center py-12 space-y-4">
+                                <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20">
+                                    <AlertTriangle size={32} className="text-red-400" />
+                                </div>
+                                <p className="text-red-400 font-medium">Failed to generate AI summary</p>
+                                <p className="text-foreground/40 text-sm text-center max-w-sm">{summary}</p>
+                            </div>
+                        ) : summary ? (
+                            <div className="ai-summary-content">
+                                <ReactMarkdown
+                                    remarkPlugins={[remarkGfm]}
+                                    components={{
+                                        h1: ({node, ...props}) => <h1 className="text-xl font-bold text-white border-b border-white/10 pb-2 mb-4 mt-6" {...props} />,
+                                        h2: ({node, ...props}) => <h2 className="text-lg font-bold text-white mt-8 mb-4 flex items-center gap-2" {...props} />,
+                                        h3: ({node, ...props}) => <h3 className="text-base font-bold text-white mt-6 mb-3 flex items-center gap-2" {...props}><span className="w-1.5 h-1.5 rounded-full bg-neon-green" />{props.children}</h3>,
+                                        h4: ({node, ...props}) => <h4 className="text-sm font-bold text-white mt-4 mb-2 flex items-center gap-2" {...props}><span className="w-1 h-3 bg-neon-green/50 rounded-full" />{props.children}</h4>,
+                                        p: ({node, ...props}) => <p className="text-sm text-foreground/80 leading-relaxed my-3" {...props} />,
+                                        ul: ({node, ...props}) => <ul className="space-y-2 my-4 ml-2" {...props} />,
+                                        li: ({node, ...props}) => (
+                                            <li className="flex items-start gap-2 text-sm text-foreground/80">
+                                                <span className="text-neon-green mt-1.5 shrink-0 text-[10px]">▶</span>
+                                                <span>{props.children}</span>
+                                            </li>
+                                        ),
+                                        code: ({node, inline, ...props}) => (
+                                            inline 
+                                            ? <code className="px-1.5 py-0.5 rounded bg-white/10 text-neon-green text-xs font-mono" {...props} />
+                                            : <div className="p-4 rounded-xl bg-black/50 border border-white/5 my-4 overflow-x-auto"><code className="text-xs font-mono text-neon-green/90" {...props} /></div>
+                                        ),
+                                        strong: ({node, ...props}) => <strong className="text-white font-semibold" {...props} />,
+                                        blockquote: ({node, ...props}) => <blockquote className="border-l-2 border-neon-green/30 pl-4 py-1 my-4 text-foreground/60 italic" {...props} />,
+                                        a: ({node, ...props}) => <a className="text-neon-green hover:underline" target="_blank" rel="noopener noreferrer" {...props} />
+                                    }}
+                                >
+                                    {summary}
+                                </ReactMarkdown>
+                            </div>
+                        ) : (
+                            <div className="text-center py-8 text-foreground/40">
+                                No summary available
+                            </div>
+                        )}
+                    </div>
+                </motion.div>
             </motion.div>
-        </motion.div>
+        </AnimatePresence>,
+        document.body
     )
 }
 
@@ -192,6 +238,7 @@ export default function URLAnalyzerPage() {
     const [aiModalOpen, setAiModalOpen] = useState(false)
     const [aiSummary, setAiSummary] = useState(null)
     const [aiLoading, setAiLoading] = useState(false)
+    const [aiError, setAiError] = useState(false)
 
     const handleAnalyze = async () => {
         if (!url.trim()) return
@@ -223,6 +270,8 @@ export default function URLAnalyzerPage() {
 
         setAiModalOpen(true)
         setAiLoading(true)
+        setAiError(false)
+        setAiSummary(null)
 
         try {
             const res = await fetch(`${API_BASE}/ai-analyze`, {
@@ -236,10 +285,20 @@ export default function URLAnalyzerPage() {
             })
             if (!res.ok) throw new Error('Failed to generate summary')
             const data = await res.json()
-            // Backend returns ai_report field
-            setAiSummary(data.ai_report || data.summary || JSON.stringify(data, null, 2))
+            // Backend returns ai_report as an object: { status, ai_summary, analysis_data }
+            const report = data.ai_report
+            if (report && report.status === 'error') {
+                setAiError(true)
+                setAiSummary(report.error || 'AI analysis service encountered an error.')
+            } else if (report && report.ai_summary) {
+                setAiSummary(report.ai_summary)
+            } else {
+                setAiError(true)
+                setAiSummary('No AI summary was generated. Please try again.')
+            }
         } catch (e) {
-            setAiSummary(`Error: ${e.message}`)
+            setAiError(true)
+            setAiSummary(e.message || 'Failed to generate AI summary')
         } finally {
             setAiLoading(false)
         }
@@ -248,16 +307,13 @@ export default function URLAnalyzerPage() {
     return (
         <div className="min-h-screen space-y-8">
             {/* AI Summary Modal */}
-            <AnimatePresence>
-                {aiModalOpen && (
-                    <AISummaryModal
-                        isOpen={aiModalOpen}
-                        onClose={() => setAiModalOpen(false)}
-                        summary={aiSummary}
-                        loading={aiLoading}
-                    />
-                )}
-            </AnimatePresence>
+            <AISummaryModal
+                isOpen={aiModalOpen}
+                onClose={() => setAiModalOpen(false)}
+                summary={aiSummary}
+                loading={aiLoading}
+                isError={aiError}
+            />
 
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

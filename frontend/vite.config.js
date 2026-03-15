@@ -20,6 +20,10 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/Recon-Analyzer/, '/api/Recon-Analyzer')
       },
+      '/api/url-analyzer': {
+        target: 'http://localhost:5004',
+        changeOrigin: true,
+      },
       '/api/malware-analyzer': {
         target: 'http://localhost:5000',
         changeOrigin: true,
