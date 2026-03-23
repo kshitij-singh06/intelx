@@ -64,7 +64,7 @@ sites = {
     "Twitch": "https://www.twitch.tv/{}",
     "Nintendo Life": "https://www.nintendolife.com/users/{}",
     "GOG": "https://www.gog.com/u/{}",
-    "Spotify": "https://open.spotify.com/user/{}",
+    # "Spotify": "https://open.spotify.com/user/{}",
     # Additional Platforms
     "PyPi": "https://pypi.org/user/{}",
     "Slides": "https://slides.com/{}",
@@ -155,7 +155,7 @@ sites = {
     "Twitch": "https://www.twitch.tv/{}",
     "Nintendo Life": "https://www.nintendolife.com/users/{}",
     "GOG": "https://www.gog.com/u/{}",
-    "Spotify": "https://open.spotify.com/user/{}",
+    # "Spotify": "https://open.spotify.com/user/{}",
     # Additional Platforms
     "PyPi": "https://pypi.org/user/{}",
     "Slides": "https://slides.com/{}",
@@ -230,7 +230,7 @@ sites = {
     "YouPic": "https://youpic.com/photographer/{}",
     "Unsplash": "https://unsplash.com/@{}",
     "Ultimate-Guitar": "https://ultimate-guitar.com/u/{}",
-    "TryHackMe": "https://tryhackme.com/p/{}",
+    # "TryHackMe": "https://tryhackme.com/p/{}",
     "Trello": "https://trello.com/{}",
     "Trakt": "https://www.trakt.tv/users/{}",
     "Periscope": "https://www.periscope.tv/{}",
