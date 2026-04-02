@@ -2,9 +2,9 @@
   "rewrites": [
     { "source": "/api/malware-analyzer/:path*", "destination": "http://3.108.12.155:5000/api/malware-analyzer/:path*" },
     { "source": "/api/web-analyzer/:path*", "destination": "https://web-analyzer-production-692b.up.railway.app/api/web-analyzer/:path*" },
-    { "source": "/api/steg-analyzer/:path*", "destination": "http://3.108.12.155:5002/api/steg-analyzer/:path*" },
-    { "source": "/api/Recon-Analyzer/:path*", "destination": "http://3.108.12.155:5003/api/Recon-Analyzer/:path*" },
-    { "source": "/api/url-analyzer/:path*", "destination": "http://3.108.12.155:5004/api/url-analyzer/:path*" },
+    { "source": "/api/steg-analyzer/:path*", "destination": "https://steg-production-8648.up.railway.app/api/steg-analyzer/:path*" },
+    { "source": "/api/Recon-Analyzer/:path*", "destination": "https://recon-production-f0ae.up.railway.app/api/Recon-Analyzer/:path*" },
+    { "source": "/api/url-analyzer/:path*", "destination": "https://url-production-4a13.up.railway.app/api/url-analyzer/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

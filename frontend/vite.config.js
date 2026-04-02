@@ -15,17 +15,26 @@ export default defineConfig({
         secure: false,
       },
       '/api/steg-analyzer': {
-        target: 'http://localhost:5002',
+        // Toggle :
+        // target: 'http://localhost:5002',
+        target: 'https://steg-production-8648.up.railway.app',
         changeOrigin: true,
+        secure: false,
       },
       '/api/Recon-Analyzer': {
-        target: 'http://localhost:5003',
+        // Toggle :
+        // target: 'http://localhost:5003',
+        target: 'https://recon-production-f0ae.up.railway.app',
         changeOrigin: true,
+        secure: false,
         rewrite: (path) => path.replace(/^\/api\/Recon-Analyzer/, '/api/Recon-Analyzer')
       },
       '/api/url-analyzer': {
-        target: 'http://localhost:5004',
+        // Toggle :
+        // target: 'http://localhost:5004',
+        target: 'https://url-production-4a13.up.railway.app',
         changeOrigin: true,
+        secure: false,
       },
       '/api/malware-analyzer': {
         target: 'http://localhost:5000',
@@ -33,8 +42,11 @@ export default defineConfig({
       },
       // Health-check-only routes
       '/health/url-analyzer': {
-        target: 'http://localhost:5004',
+        // Toggle :
+        // target: 'http://localhost:5004',
+        target: 'https://url-production-4a13.up.railway.app',
         changeOrigin: true,
+        secure: false,
         rewrite: () => '/health',
       },
     }
