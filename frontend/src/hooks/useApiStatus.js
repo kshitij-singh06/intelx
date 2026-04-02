@@ -57,11 +57,13 @@ export function useApiStatus(pollIntervalMs = 30_000) {
     const [statuses, setStatuses] = useState(initial)
     const [lastChecked, setLastChecked] = useState(null)
 
-    const check = useCallback(async () => {
-        // Mark all as checking
-        setStatuses(initial())
+    const check = useCallback(async (isInitial = false) => {
+        // Only mark as checking on the very first load or manual refetch
+        if (isInitial) {
+            setStatuses(initial())
+        }
 
-        const settled = await Promise.allSettled(
+        await Promise.allSettled(
             SERVICES.map(async (svc) => {
                 try {
                     const res = await fetch(svc.url, {
@@ -69,25 +71,20 @@ export function useApiStatus(pollIntervalMs = 30_000) {
                         signal: AbortSignal.timeout(5_000),
                         cache: 'no-store',
                     })
-                    return { id: svc.id, status: svc.ok(res) ? 'online' : 'offline' }
+                    const status = svc.ok(res) ? 'online' : 'offline'
+                    setStatuses((prev) => ({ ...prev, [svc.id]: status }))
                 } catch {
-                    return { id: svc.id, status: 'offline' }
+                    setStatuses((prev) => ({ ...prev, [svc.id]: 'offline' }))
                 }
             })
         )
 
-        const next = {}
-        for (const r of settled) {
-            if (r.status === 'fulfilled') next[r.value.id] = r.value.status
-        }
-
-        setStatuses((prev) => ({ ...prev, ...next }))
         setLastChecked(new Date())
     }, [])
 
     useEffect(() => {
-        check()
-        const timer = setInterval(check, pollIntervalMs)
+        check(true)
+        const timer = setInterval(() => check(false), pollIntervalMs)
         return () => clearInterval(timer)
     }, [check, pollIntervalMs])
 
