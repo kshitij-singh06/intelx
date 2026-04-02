@@ -1,7 +1,7 @@
 {
   "rewrites": [
     { "source": "/api/malware-analyzer/:path*", "destination": "http://3.108.12.155:5000/api/malware-analyzer/:path*" },
-    { "source": "/api/web-analyzer/:path*", "destination": "http://3.108.12.155:5001/api/web-analyzer/:path*" },
+    { "source": "/api/web-analyzer/:path*", "destination": "https://web-analyzer-production-692b.up.railway.app/api/web-analyzer/:path*" },
     { "source": "/api/steg-analyzer/:path*", "destination": "http://3.108.12.155:5002/api/steg-analyzer/:path*" },
     { "source": "/api/Recon-Analyzer/:path*", "destination": "http://3.108.12.155:5003/api/Recon-Analyzer/:path*" },
     { "source": "/api/url-analyzer/:path*", "destination": "http://3.108.12.155:5004/api/url-analyzer/:path*" },

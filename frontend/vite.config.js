@@ -8,8 +8,11 @@ export default defineConfig({
     open: true,
     proxy: {
       '/api/web-analyzer': {
-        target: 'http://localhost:5001',
+        // Toggle :
+        // target: 'http://localhost:5001',
+        target: 'https://web-analyzer-production-692b.up.railway.app',
         changeOrigin: true,
+        secure: false,
       },
       '/api/steg-analyzer': {
         target: 'http://localhost:5002',
