@@ -3,15 +3,8 @@
  *
  * All URLs are relative (no host/port), exactly like the tool pages, so this
  * works in both dev (Vite proxy) and production (same-origin reverse proxy).
- *
- * Health endpoints:
- *   Web-Analyzer    → GET /api/web-analyzer/          (root returns JSON 200)
- *   Malware-Analyzer→ GET /api/malware-analyzer/health
- *   Steg-Analyzer   → GET /api/steg-analyzer/          (root returns JSON 200)
- *   Recon-Analyzer  → GET /api/Recon-Analyzer/health
- *   URL-Analyzer    → GET /health/url-analyzer          (custom proxy → /health)
  */
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 
 export const SERVICES = [
     {
@@ -46,47 +39,82 @@ export const SERVICES = [
     },
 ]
 
+// --- Global Store ---
+// Keeps track of the API status entirely outside of React components.
+// This prevents multiple polling intervals and stops status resets when switching tabs!
+const globalState = {
+    statuses: Object.fromEntries(SERVICES.map((s) => [s.id, 'checking'])),
+    lastChecked: null,
+}
+
+const listeners = new Set()
+
+function notify() {
+    listeners.forEach(l => l())
+}
+
+let isPolling = false
+
+async function performCheck(isInitial = false) {
+    if (isInitial) {
+        SERVICES.forEach(s => globalState.statuses[s.id] = 'checking')
+        notify()
+    }
+
+    await Promise.allSettled(
+        SERVICES.map(async (svc) => {
+            try {
+                const res = await fetch(svc.url, {
+                    method: 'GET',
+                    signal: AbortSignal.timeout(5_000),
+                    cache: 'no-store',
+                })
+                globalState.statuses[svc.id] = svc.ok(res) ? 'online' : 'offline'
+                notify()
+            } catch {
+                globalState.statuses[svc.id] = 'offline'
+                notify()
+            }
+        })
+    )
+
+    globalState.lastChecked = new Date()
+    notify()
+}
+
+function startPolling(intervalMs) {
+    if (isPolling) return
+    isPolling = true
+    
+    performCheck(true)
+    setInterval(() => performCheck(false), intervalMs)
+}
+
 /**
  * @typedef {'online'|'offline'|'checking'} ApiStatus
  * @returns {{ statuses: Record<string, ApiStatus>, lastChecked: Date|null, refetch: () => Promise<void> }}
  */
 export function useApiStatus(pollIntervalMs = 30_000) {
-    const initial = () =>
-        Object.fromEntries(SERVICES.map((s) => [s.id, 'checking']))
-
-    const [statuses, setStatuses] = useState(initial)
-    const [lastChecked, setLastChecked] = useState(null)
-
-    const check = useCallback(async (isInitial = false) => {
-        // Only mark as checking on the very first load or manual refetch
-        if (isInitial) {
-            setStatuses(initial())
-        }
-
-        await Promise.allSettled(
-            SERVICES.map(async (svc) => {
-                try {
-                    const res = await fetch(svc.url, {
-                        method: 'GET',
-                        signal: AbortSignal.timeout(5_000),
-                        cache: 'no-store',
-                    })
-                    const status = svc.ok(res) ? 'online' : 'offline'
-                    setStatuses((prev) => ({ ...prev, [svc.id]: status }))
-                } catch {
-                    setStatuses((prev) => ({ ...prev, [svc.id]: 'offline' }))
-                }
-            })
-        )
-
-        setLastChecked(new Date())
-    }, [])
+    const [statuses, setStatuses] = useState(globalState.statuses)
+    const [lastChecked, setLastChecked] = useState(globalState.lastChecked)
 
     useEffect(() => {
-        check(true)
-        const timer = setInterval(() => check(false), pollIntervalMs)
-        return () => clearInterval(timer)
-    }, [check, pollIntervalMs])
+        // Start global polling (ignored if already started)
+        startPolling(pollIntervalMs)
 
-    return { statuses, lastChecked, refetch: check }
+        // Subscribe local component to global state changes
+        const handleUpdate = () => {
+            setStatuses({ ...globalState.statuses })
+            setLastChecked(globalState.lastChecked)
+        }
+        
+        listeners.add(handleUpdate)
+        
+        // Just in case it updated between mount and subscribing
+        handleUpdate()
+
+        return () => listeners.delete(handleUpdate)
+    }, [pollIntervalMs])
+
+    return { statuses, lastChecked, refetch: () => performCheck(true) }
 }
