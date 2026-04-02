@@ -115,7 +115,7 @@ export function ToolsOverviewSection() {
     }
 
     return (
-        <section id="tools" ref={ref} className="py-28 px-4 relative overflow-hidden">
+        <section id="tools" ref={ref} className="py-16 sm:py-28 px-4 relative overflow-hidden">
             {/* Background elements */}
             <div className="absolute inset-0 bg-gradient-to-b from-background via-[#0d1235] to-background" />
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-neon-green/50 to-transparent" />
@@ -185,7 +185,7 @@ export function ToolsOverviewSection() {
                                 <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-${tool.accent} to-transparent opacity-60`} />
 
                                 {/* Content */}
-                                <div className="relative z-10 p-8 flex flex-col h-full">
+                                <div className="relative z-10 p-5 sm:p-8 flex flex-col h-full">
                                     {/* Icon with glow */}
                                     <div className="mb-6">
                                         <motion.div

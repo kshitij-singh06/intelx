@@ -82,26 +82,22 @@ export default function OverviewPage() {
                 />
             </div>
 
-            {/* Quick Actions Grid - Second Row (2 centered cards) */}
-            <div className="flex justify-center gap-4">
-                <div className="w-full max-w-sm">
-                    <QuickActionCard
-                        title="Steg Analysis"
-                        description="Detect hidden data in files."
-                        icon={Eye}
-                        to="/dashboard/steg"
-                        color="purple-500"
-                    />
-                </div>
-                <div className="w-full max-w-sm">
-                    <QuickActionCard
-                        title="URL Analyzer"
-                        description="Trace redirects & assess safety."
-                        icon={Link2}
-                        to="/dashboard/url"
-                        color="blue-500"
-                    />
-                </div>
+            {/* Quick Actions Grid - Second Row (2 cards) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <QuickActionCard
+                    title="Steg Analysis"
+                    description="Detect hidden data in files."
+                    icon={Eye}
+                    to="/dashboard/steg"
+                    color="purple-500"
+                />
+                <QuickActionCard
+                    title="URL Analyzer"
+                    description="Trace redirects & assess safety."
+                    icon={Link2}
+                    to="/dashboard/url"
+                    color="blue-500"
+                />
             </div>
         </div>
     )

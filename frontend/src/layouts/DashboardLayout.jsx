@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Outlet, NavLink, useLocation, Link } from 'react-router-dom'
 import {
@@ -15,10 +15,11 @@ import {
     Bell
 } from 'lucide-react'
 
-const SidebarItem = ({ to, icon: Icon, label, collapsed, end }) => (
+const SidebarItem = ({ to, icon: Icon, label, collapsed, end, onClick }) => (
     <NavLink
         to={to}
         end={end}
+        onClick={onClick}
         className={({ isActive }) => `
       flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group relative
       ${isActive
@@ -29,7 +30,7 @@ const SidebarItem = ({ to, icon: Icon, label, collapsed, end }) => (
     >
         {({ isActive }) => (
             <>
-                <Icon size={20} className="stroke-[1.5]" />
+                <Icon size={20} className="stroke-[1.5] flex-shrink-0" />
                 {!collapsed && (
                     <span className="font-mono text-sm tracking-wide">{label}</span>
                 )}
@@ -46,7 +47,23 @@ const SidebarItem = ({ to, icon: Icon, label, collapsed, end }) => (
 
 export default function DashboardLayout() {
     const [collapsed, setCollapsed] = useState(false)
+    const [mobileOpen, setMobileOpen] = useState(false)
     const location = useLocation()
+
+    // Close mobile sidebar on route change
+    useEffect(() => {
+        setMobileOpen(false)
+    }, [location.pathname])
+
+    // Prevent body scroll when mobile sidebar is open
+    useEffect(() => {
+        if (mobileOpen) {
+            document.body.style.overflow = 'hidden'
+        } else {
+            document.body.style.overflow = ''
+        }
+        return () => { document.body.style.overflow = '' }
+    }, [mobileOpen])
 
     const getPageTitle = () => {
         switch (location.pathname) {
@@ -61,12 +78,76 @@ export default function DashboardLayout() {
         }
     }
 
+    const navItems = (
+        <>
+            <SidebarItem to="/dashboard" icon={LayoutDashboard} label="Overview" collapsed={collapsed} end onClick={() => setMobileOpen(false)} />
+            <div className="my-4 h-px bg-foreground/10 mx-2" />
+            <SidebarItem to="/dashboard/web" icon={Globe} label="Web Analysis" collapsed={collapsed} onClick={() => setMobileOpen(false)} />
+            <SidebarItem to="/dashboard/malware" icon={Bug} label="Malware Analysis" collapsed={collapsed} onClick={() => setMobileOpen(false)} />
+            <SidebarItem to="/dashboard/steg" icon={Eye} label="Steg Analysis" collapsed={collapsed} onClick={() => setMobileOpen(false)} />
+            <SidebarItem to="/dashboard/recon" icon={Radar} label="Recon Analysis" collapsed={collapsed} onClick={() => setMobileOpen(false)} />
+            <SidebarItem to="/dashboard/url" icon={Link2} label="URL Analyzer" collapsed={collapsed} onClick={() => setMobileOpen(false)} />
+        </>
+    )
+
     return (
         <div className="min-h-screen bg-[#05070a] flex text-foreground overflow-hidden font-sans">
-            {/* Sidebar */}
+
+            {/* ── Mobile Sidebar Overlay ── */}
+            <AnimatePresence>
+                {mobileOpen && (
+                    <>
+                        {/* Backdrop */}
+                        <motion.div
+                            key="backdrop"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="fixed inset-0 z-30 bg-black/70 lg:hidden"
+                            onClick={() => setMobileOpen(false)}
+                        />
+
+                        {/* Drawer */}
+                        <motion.aside
+                            key="drawer"
+                            initial={{ x: '-100%' }}
+                            animate={{ x: 0 }}
+                            exit={{ x: '-100%' }}
+                            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                            className="fixed top-0 left-0 bottom-0 z-40 w-72 flex flex-col border-r border-foreground/10 bg-[#0a0e17]/98 backdrop-blur-xl h-screen lg:hidden"
+                        >
+                            {/* Logo */}
+                            <div className="h-16 flex items-center justify-between px-6 border-b border-foreground/10">
+                                <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                                    <div className="w-8 h-8 rounded bg-neon-green flex items-center justify-center text-background font-mono font-bold text-xl">
+                                        X
+                                    </div>
+                                    <span className="font-mono font-bold text-xl tracking-wider text-white">
+                                        INTEL<span className="text-neon-green">X</span>
+                                    </span>
+                                </Link>
+                                <button
+                                    onClick={() => setMobileOpen(false)}
+                                    className="p-2 text-foreground/60 hover:text-foreground transition-colors"
+                                >
+                                    <X size={20} />
+                                </button>
+                            </div>
+
+                            {/* Navigation */}
+                            <nav className="flex-1 py-6 px-3 space-y-2 overflow-y-auto">
+                                {navItems}
+                            </nav>
+                        </motion.aside>
+                    </>
+                )}
+            </AnimatePresence>
+
+            {/* ── Desktop Sidebar ── */}
             <motion.aside
                 initial={false}
-                className={`relative z-20 flex flex-col border-r border-foreground/10 bg-[#0a0e17]/80 backdrop-blur-xl h-screen transition-all duration-300 ease-in-out ${collapsed ? 'w-20' : 'w-72'}`}
+                className={`hidden lg:relative lg:z-20 lg:flex flex-col border-r border-foreground/10 bg-[#0a0e17]/80 backdrop-blur-xl h-screen transition-all duration-300 ease-in-out ${collapsed ? 'w-20' : 'w-72'}`}
             >
                 {/* Logo */}
                 <div className="h-16 flex items-center px-6 border-b border-foreground/10">
@@ -84,13 +165,7 @@ export default function DashboardLayout() {
 
                 {/* Navigation */}
                 <nav className="flex-1 py-6 px-3 space-y-2 overflow-y-auto">
-                    <SidebarItem to="/dashboard" icon={LayoutDashboard} label="Overview" collapsed={collapsed} end />
-                    <div className="my-4 h-px bg-foreground/10 mx-2" />
-                    <SidebarItem to="/dashboard/web" icon={Globe} label="Web Analysis" collapsed={collapsed} />
-                    <SidebarItem to="/dashboard/malware" icon={Bug} label="Malware Analysis" collapsed={collapsed} />
-                    <SidebarItem to="/dashboard/steg" icon={Eye} label="Steg Analysis" collapsed={collapsed} />
-                    <SidebarItem to="/dashboard/recon" icon={Radar} label="Recon Analysis" collapsed={collapsed} />
-                    <SidebarItem to="/dashboard/url" icon={Link2} label="URL Analyzer" collapsed={collapsed} />
+                    {navItems}
                 </nav>
 
                 {/* Bottom Actions */}
@@ -104,7 +179,7 @@ export default function DashboardLayout() {
                 </div>
             </motion.aside>
 
-            {/* Main Content */}
+            {/* ── Main Content ── */}
             <main className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden relative">
                 {/* Background Gradients */}
                 <div className="absolute inset-0 z-0 pointer-events-none">
@@ -113,21 +188,29 @@ export default function DashboardLayout() {
                 </div>
 
                 {/* Top Bar */}
-                <header className="h-16 flex items-center justify-between px-8 border-b border-foreground/10 bg-[#0a0e17]/50 backdrop-blur-md relative z-10">
-                    <div className="flex items-center gap-4">
-                        <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                <header className="h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8 border-b border-foreground/10 bg-[#0a0e17]/50 backdrop-blur-md relative z-10">
+                    <div className="flex items-center gap-3">
+                        {/* Mobile hamburger */}
+                        <button
+                            onClick={() => setMobileOpen(true)}
+                            className="lg:hidden p-2 text-foreground/60 hover:text-foreground transition-colors rounded-lg hover:bg-foreground/5"
+                            aria-label="Open navigation"
+                        >
+                            <Menu size={22} />
+                        </button>
+                        <h1 className="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-2">
                             <span className="text-neon-green">/</span>
                             {getPageTitle()}
                         </h1>
                     </div>
 
                     <div className="flex items-center gap-4">
-                        {/* Search Removed */}
+                        {/* Reserved for future actions */}
                     </div>
                 </header>
 
                 {/* Content Scroll Area */}
-                <div className="flex-1 overflow-y-auto overflow-x-hidden p-8 relative z-10 custom-scrollbar">
+                <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-8 relative z-10 custom-scrollbar">
                     <Outlet />
                 </div>
             </main>

@@ -36,7 +36,7 @@ const ToolResultCard = ({ toolName, result }) => {
                     {Object.entries(result.images).map(([category, urls]) => (
                         <div key={category}>
                             <div className="text-xs text-foreground/60 mb-2 font-semibold">{category}</div>
-                            <div className="grid grid-cols-4 gap-2">
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                                 {urls.slice(0, 8).map((url, i) => (
                                     <a
                                         key={i}
@@ -329,14 +329,14 @@ export default function StegAnalysisPage() {
         <div className="max-w-7xl mx-auto space-y-8 pb-20">
 
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                     <h2 className="text-2xl font-bold text-white flex items-center gap-3">
                         <Eye className="text-neon-green" /> Steg Analyzer
                     </h2>
                     <p className="text-foreground/60">Steganography Detection & Analysis</p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2">
                     <div className="px-3 py-1 rounded bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-mono flex items-center gap-2">
                         <ImageIcon size={14} /> HIDDEN DATA DETECTION
                     </div>

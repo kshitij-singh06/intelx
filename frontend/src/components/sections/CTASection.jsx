@@ -28,7 +28,7 @@ export function CTASection() {
     }
 
     return (
-        <section ref={ref} className="py-32 px-4 relative overflow-hidden">
+        <section ref={ref} className="py-20 sm:py-32 px-4 relative overflow-hidden">
             {/* Rich animated background */}
             <div className="absolute inset-0">
                 {/* Base gradient */}
@@ -150,7 +150,7 @@ export function CTASection() {
                         whileTap={{ scale: 0.95 }}
                     >
                         <Link to="/dashboard">
-                            <Button variant="primary" className="relative overflow-hidden group text-lg px-12 py-6">
+                            <Button variant="primary" className="relative overflow-hidden group text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-6">
                                 {/* Shimmer effect */}
                                 <motion.span
                                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"
@@ -174,7 +174,7 @@ export function CTASection() {
                         whileTap={{ scale: 0.95 }}
                     >
                         <Link to="/docs">
-                            <Button variant="outline" className="text-lg px-12 py-6 flex items-center gap-3">
+                            <Button variant="outline" className="text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-6 flex items-center gap-3">
                                 <FileText size={22} />
                                 View Documentation
                             </Button>
@@ -192,7 +192,7 @@ export function CTASection() {
 
                     {/* Terminal-style text */}
                     <motion.p
-                        className="mt-8 font-mono text-foreground/40 text-sm"
+                        className="mt-8 font-mono text-foreground/40 text-xs sm:text-sm text-center break-all sm:break-normal"
                         animate={{ opacity: [0.4, 0.8, 0.4] }}
                         transition={{ duration: 4, repeat: Infinity }}
                     >

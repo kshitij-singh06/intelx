@@ -153,7 +153,7 @@ export default function ReconGraphPage() {
     }
 
     return (
-        <div className="min-h-screen p-6 lg:p-8 space-y-8">
+        <div className="min-h-screen space-y-8">
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -205,36 +205,40 @@ export default function ReconGraphPage() {
                 layout
                 className="p-6 rounded-2xl bg-[#0a0e17] border border-white/10"
             >
-                <div className="flex flex-col md:flex-row gap-4">
-                    {mode === 'footprint' && (
-                        <select
-                            value={footprintType}
-                            onChange={(e) => setFootprintType(e.target.value)}
-                            disabled={loading}
-                            className="px-4 py-3 rounded-xl bg-black/50 border border-white/10 text-white font-mono text-sm focus:outline-none focus:border-neon-yellow/50 disabled:opacity-50"
-                        >
-                            <option value="username">Username</option>
-                            <option value="email">Email</option>
-                            <option value="phone">Phone</option>
-                        </select>
-                    )}
-                    <div className="flex-1 relative">
-                        <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/40" />
-                        <input
-                            type="text"
-                            value={query}
-                            onChange={(e) => setQuery(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-                            disabled={loading}
-                            placeholder={mode === 'threat' ? 'Enter IP address or domain...' : `Enter ${footprintType}...`}
-                            className="w-full pl-12 pr-4 py-3 rounded-xl bg-black/50 border border-white/10 text-white placeholder:text-foreground/40 font-mono focus:outline-none focus:border-neon-yellow/50 disabled:opacity-50"
-                        />
+                <div className="flex flex-col gap-3">
+                    {/* Select + Input row — stacks on mobile, side-by-side on md+ */}
+                    <div className="flex flex-col sm:flex-row gap-3">
+                        {mode === 'footprint' && (
+                            <select
+                                value={footprintType}
+                                onChange={(e) => setFootprintType(e.target.value)}
+                                disabled={loading}
+                                className="w-full sm:w-auto px-4 py-3 rounded-xl bg-black/50 border border-white/10 text-white font-mono text-sm focus:outline-none focus:border-neon-yellow/50 disabled:opacity-50 shrink-0"
+                            >
+                                <option value="username">Username</option>
+                                <option value="email">Email</option>
+                                <option value="phone">Phone</option>
+                            </select>
+                        )}
+                        <div className="flex-1 relative min-w-0">
+                            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/40" />
+                            <input
+                                type="text"
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+                                disabled={loading}
+                                placeholder={mode === 'threat' ? 'Enter IP address or domain...' : `Enter ${footprintType}...`}
+                                className="w-full pl-12 pr-4 py-3 rounded-xl bg-black/50 border border-white/10 text-white placeholder:text-foreground/40 font-mono focus:outline-none focus:border-neon-yellow/50 disabled:opacity-50"
+                            />
+                        </div>
                     </div>
+                    {/* Button — full width on mobile, auto on sm+ */}
                     <Button
                         onClick={handleSubmit}
                         disabled={loading || !query.trim()}
                         variant="primary"
-                        className="px-6 py-3 font-mono"
+                        className="w-full sm:w-auto sm:self-end px-6 py-3 font-mono"
                     >
                         {loading ? (
                             <><Loader2 size={18} className="animate-spin mr-2" /> Scanning...</>

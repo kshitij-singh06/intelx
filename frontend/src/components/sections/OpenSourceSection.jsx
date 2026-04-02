@@ -26,7 +26,7 @@ export function OpenSourceSection() {
     }
 
     return (
-        <section ref={ref} className="py-28 px-4 relative overflow-hidden">
+        <section ref={ref} className="py-16 sm:py-28 px-4 relative overflow-hidden">
             {/* Background */}
             <div className="absolute inset-0 bg-gradient-to-b from-[#0a0e27] via-[#0d1235] to-[#0a0e27]" />
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-foreground/20 to-transparent" />
@@ -118,7 +118,7 @@ export function OpenSourceSection() {
                 {/* Support callout */}
                 <motion.div
                     variants={itemVariants}
-                    className="relative p-8 rounded-2xl overflow-hidden inline-block"
+                    className="relative p-5 sm:p-8 rounded-2xl overflow-hidden inline-block w-full sm:w-auto"
                     style={{
                         background: 'linear-gradient(135deg, rgba(255, 255, 0, 0.1) 0%, rgba(255, 255, 0, 0.02) 100%)',
                         border: '1px solid rgba(255, 255, 0, 0.3)',

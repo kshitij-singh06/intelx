@@ -168,15 +168,15 @@ export default function WebAnalysisPage() {
             </div>
 
             {/* Input Bar */}
-            <div className="flex items-center gap-4 p-4 bg-white/[0.02] border border-white/10 rounded-xl">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 p-4 bg-white/[0.02] border border-white/10 rounded-xl">
                 <input
                     value={url}
                     onChange={e => setUrl(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && handleScan()}
                     placeholder="Enter domain (e.g., instagram.com)"
-                    className="flex-1 bg-black/50 border border-white/10 rounded px-4 py-2 text-white font-mono focus:border-neon-green/50 outline-none"
+                    className="flex-1 bg-black/50 border border-white/10 rounded px-4 py-2 text-white font-mono focus:border-neon-green/50 outline-none min-w-0"
                 />
-                <Button onClick={handleScan} disabled={loading} className="whitespace-nowrap">
+                <Button onClick={handleScan} disabled={loading} className="whitespace-nowrap sm:shrink-0">
                     {loading ? 'Scanning...' : 'Run Analysis'}
                 </Button>
             </div>
@@ -188,8 +188,8 @@ export default function WebAnalysisPage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="bg-white/[0.02] border border-white/10 rounded-xl p-4 space-y-2"
                 >
-                    <div className="flex justify-between text-xs font-mono mb-1">
-                        <div className="space-x-4">
+                    <div className="flex flex-wrap justify-between text-xs font-mono mb-1 gap-2">
+                        <div className="flex flex-wrap gap-x-4 gap-y-1">
                             <span className="text-neon-green">{progress.successful} jobs successful</span>
                             <span className="text-red-500">{progress.failed} jobs failed</span>
                         </div>

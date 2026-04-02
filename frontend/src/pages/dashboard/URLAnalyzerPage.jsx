@@ -416,7 +416,7 @@ export default function URLAnalyzerPage() {
                                     <ExternalLink size={14} />
                                 </a>
                             </div>
-                            <div className="flex flex-col items-end gap-3">
+                            <div className="flex flex-col items-start lg:items-end gap-3">
                                 <RiskBadge level={results.risk_assessment?.level} score={results.risk_assessment?.score} />
                                 <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono ${results.is_safe
                                     ? 'bg-green-500/10 text-green-400 border border-green-500/30'
@@ -498,7 +498,7 @@ export default function URLAnalyzerPage() {
                         <Button
                             onClick={handleGenerateAISummary}
                             variant="outline"
-                            className="flex items-center gap-2"
+                            className="flex items-center gap-2 w-full sm:w-auto justify-center"
                             disabled={aiLoading}
                         >
                             {aiLoading ? (

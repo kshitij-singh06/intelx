@@ -41,7 +41,7 @@ export function IntroductionSection() {
     ]
 
     return (
-        <section ref={ref} className="py-28 px-4 relative overflow-hidden">
+        <section ref={ref} className="py-16 sm:py-28 px-4 relative overflow-hidden">
             {/* Background */}
             <div className="absolute inset-0 bg-gradient-to-br from-background via-[#0d1235]/50 to-background" />
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-neon-green/30 to-transparent" />

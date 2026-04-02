@@ -134,7 +134,7 @@ export function HeroSection() {
                 {/* Main headline with glow effect */}
                 <motion.div variants={itemVariants} className="relative mb-8">
                     <motion.h1
-                        className="text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] font-bold text-foreground font-mono relative z-10"
+                        className="text-5xl sm:text-7xl md:text-9xl lg:text-[10rem] font-bold text-foreground font-mono relative z-10"
                         style={{
                             textShadow: '0 0 60px rgba(0, 255, 0, 0.3), 0 0 120px rgba(0, 255, 0, 0.1)'
                         }}
@@ -166,9 +166,9 @@ export function HeroSection() {
                 </motion.p>
 
                 {/* What We Offer Box - Enhanced glassmorphism */}
-                <motion.div variants={itemVariants} className="mb-14 mx-auto max-w-lg">
+                <motion.div variants={itemVariants} className="mb-10 sm:mb-14 mx-auto max-w-lg w-full">
                     <motion.div
-                        className="relative p-8 rounded-2xl overflow-hidden"
+                        className="relative p-5 sm:p-8 rounded-2xl overflow-hidden"
                         style={{
                             background: 'linear-gradient(135deg, rgba(0, 255, 0, 0.08) 0%, rgba(255, 255, 0, 0.04) 100%)',
                             backdropFilter: 'blur(20px)',

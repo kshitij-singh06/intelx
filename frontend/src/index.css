@@ -67,6 +67,28 @@ body {
     backdrop-filter: blur(12px);
     border: 1px solid rgba(0, 255, 0, 0.3);
   }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #1f2543;
+    border-radius: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #00ff00;
+  }
+}
+
+/* Ensure no element causes horizontal scroll */
+img, video, svg {
+  max-width: 100%;
 }
 
 /* Reduced motion support */

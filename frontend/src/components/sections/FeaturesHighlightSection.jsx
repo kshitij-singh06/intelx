@@ -40,7 +40,7 @@ export function FeaturesHighlightSection() {
     }
 
     return (
-        <section ref={ref} className="py-24 px-4 relative overflow-hidden bg-[#0a0a0a]">
+        <section ref={ref} className="py-16 sm:py-24 px-4 relative overflow-hidden bg-[#0a0a0a]">
             {/* Subtle background */}
             <div className="absolute inset-0 bg-gradient-to-b from-background via-[#0a0a0a] to-background" />
 
