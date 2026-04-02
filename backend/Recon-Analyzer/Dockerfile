@@ -21,7 +21,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY src/ ./src
 
 # Copy .env file for API keys
-COPY .env ./src/.env
+# COPY .env ./src/.env
 
 # Copy test file for running tests inside container
 COPY test.py ./test.py
