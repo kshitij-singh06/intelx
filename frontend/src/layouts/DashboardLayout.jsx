@@ -8,42 +8,80 @@ import {
     Eye,
     Radar,
     Link2,
-    Settings,
+    FileText,
     Menu,
     X,
-    Search,
-    Bell
+    Home,
+    ChevronLeft,
+    ChevronRight
 } from 'lucide-react'
 
-const SidebarItem = ({ to, icon: Icon, label, collapsed, end, onClick }) => (
-    <NavLink
-        to={to}
-        end={end}
-        onClick={onClick}
-        className={({ isActive }) => `
-      flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group relative
-      ${isActive
-                ? 'bg-neon-green/10 text-neon-green shadow-[0_0_20px_rgba(0,255,0,0.1)] border border-neon-green/20'
-                : 'text-foreground/60 hover:text-foreground hover:bg-foreground/5'
-            }
-    `}
-    >
-        {({ isActive }) => (
-            <>
-                <Icon size={20} className="stroke-[1.5] flex-shrink-0" />
-                {!collapsed && (
-                    <span className="font-mono text-sm tracking-wide">{label}</span>
+function SidebarItem({ to, icon: Icon, label, collapsed, end, onClick }) {
+    const [hovered, setHovered] = useState(false)
+    const [tooltipPos, setTooltipPos] = useState({ top: 0 })
+
+    const handleMouseEnter = (e) => {
+        if (collapsed) {
+            const rect = e.currentTarget.getBoundingClientRect()
+            setTooltipPos({ top: rect.top + rect.height / 2 })
+            setHovered(true)
+        }
+    }
+
+    return (
+        <>
+            <NavLink
+                to={to}
+                end={end}
+                onClick={onClick}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={() => setHovered(false)}
+                className={({ isActive }) => `
+                  flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group relative
+                  ${isActive
+                        ? 'bg-neon-green/10 text-neon-green shadow-[0_0_20px_rgba(0,255,0,0.1)] border border-neon-green/20'
+                        : 'text-foreground/60 hover:text-foreground hover:bg-foreground/5'
+                    }
+                `}
+            >
+                {({ isActive }) => (
+                    <>
+                        <Icon size={20} className="stroke-[1.5] flex-shrink-0" />
+                        {!collapsed && (
+                            <span className="font-mono text-sm tracking-wide">{label}</span>
+                        )}
+                        {isActive && !collapsed && (
+                            <motion.div
+                                layoutId="active-pill"
+                                className="absolute left-0 w-1 h-8 bg-neon-green rounded-r-full"
+                            />
+                        )}
+                    </>
                 )}
-                {isActive && !collapsed && (
+            </NavLink>
+
+            {/* Portal-style tooltip for collapsed state */}
+            <AnimatePresence>
+                {collapsed && hovered && (
                     <motion.div
-                        layoutId="active-pill"
-                        className="absolute left-0 w-1 h-8 bg-neon-green rounded-r-full"
-                    />
+                        initial={{ opacity: 0, x: -6 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -6 }}
+                        transition={{ duration: 0.15 }}
+                        className="fixed z-[100] pointer-events-none"
+                        style={{ top: tooltipPos.top, left: '88px', transform: 'translateY(-50%)' }}
+                    >
+                        <div className="flex items-center gap-2 px-3 py-2 bg-[#0d1117] border border-neon-green/25 rounded-lg shadow-xl shadow-black/50 whitespace-nowrap">
+                            <span className="text-xs font-mono text-white">{label}</span>
+                        </div>
+                        {/* Arrow pointing left */}
+                        <div className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-[#0d1117]" />
+                    </motion.div>
                 )}
-            </>
-        )}
-    </NavLink>
-)
+            </AnimatePresence>
+        </>
+    )
+}
 
 export default function DashboardLayout() {
     const [collapsed, setCollapsed] = useState(false)
@@ -73,8 +111,19 @@ export default function DashboardLayout() {
             case '/dashboard/steg': return 'Steg Analysis'
             case '/dashboard/recon': return 'Recon Analysis'
             case '/dashboard/url': return 'URL Analyzer'
-            case '/dashboard/settings': return 'Settings'
             default: return 'Dashboard'
+        }
+    }
+
+    const getPageSubtitle = () => {
+        switch (location.pathname) {
+            case '/dashboard': return 'System overview & quick actions'
+            case '/dashboard/web': return 'Analyze domains, IPs & web infrastructure'
+            case '/dashboard/malware': return 'Static & dynamic file forensics'
+            case '/dashboard/steg': return 'Detect hidden data in images & files'
+            case '/dashboard/recon': return 'OSINT & digital footprint intelligence'
+            case '/dashboard/url': return 'Redirect chain tracing & risk assessment'
+            default: return ''
         }
     }
 
@@ -87,6 +136,8 @@ export default function DashboardLayout() {
             <SidebarItem to="/dashboard/steg" icon={Eye} label="Steg Analysis" collapsed={collapsed} onClick={() => setMobileOpen(false)} />
             <SidebarItem to="/dashboard/recon" icon={Radar} label="Recon Analysis" collapsed={collapsed} onClick={() => setMobileOpen(false)} />
             <SidebarItem to="/dashboard/url" icon={Link2} label="URL Analyzer" collapsed={collapsed} onClick={() => setMobileOpen(false)} />
+            <div className="my-4 h-px bg-foreground/10 mx-2" />
+            <SidebarItem to="/docs" icon={FileText} label="Documentation" collapsed={collapsed} onClick={() => setMobileOpen(false)} />
         </>
     )
 
@@ -119,8 +170,8 @@ export default function DashboardLayout() {
                         >
                             {/* Logo */}
                             <div className="h-16 flex items-center justify-between px-6 border-b border-foreground/10">
-                                <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                                    <div className="w-8 h-8 rounded bg-neon-green flex items-center justify-center text-background font-mono font-bold text-xl">
+                                <Link to="/" title="Return to Home" className="flex items-center gap-3 hover:opacity-80 transition-opacity group">
+                                    <div className="w-8 h-8 rounded bg-neon-green flex items-center justify-center text-background font-mono font-bold text-xl group-hover:scale-105 transition-transform">
                                         X
                                     </div>
                                     <span className="font-mono font-bold text-xl tracking-wider text-white">
@@ -151,8 +202,8 @@ export default function DashboardLayout() {
             >
                 {/* Logo */}
                 <div className="h-16 flex items-center px-6 border-b border-foreground/10">
-                    <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                        <div className="w-8 h-8 rounded bg-neon-green flex items-center justify-center text-background font-mono font-bold text-xl">
+                    <Link to="/" title="Return to Home" className="flex items-center gap-3 hover:opacity-80 transition-opacity group">
+                        <div className="w-8 h-8 rounded bg-neon-green flex items-center justify-center text-background font-mono font-bold text-xl group-hover:scale-105 transition-transform">
                             X
                         </div>
                         {!collapsed && (
@@ -172,9 +223,15 @@ export default function DashboardLayout() {
                 <div className="p-3 border-t border-foreground/10">
                     <button
                         onClick={() => setCollapsed(!collapsed)}
-                        className="w-full mt-2 flex items-center justify-center p-2 text-foreground/40 hover:text-foreground transition-colors"
+                        className="w-full flex items-center justify-center gap-2 p-2.5 text-foreground/40 hover:text-neon-green hover:bg-neon-green/5 rounded-xl transition-all"
+                        title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
                     >
-                        {collapsed ? <Menu size={20} /> : <div className="flex items-center gap-2 text-xs font-mono uppercase">Collapse Sidebar</div>}
+                        {collapsed
+                            ? <ChevronRight size={18} />
+                            : <>
+                                <ChevronLeft size={16} />
+                                <span className="text-xs font-mono">Collapse</span>
+                            </>}
                     </button>
                 </div>
             </motion.aside>
@@ -198,14 +255,27 @@ export default function DashboardLayout() {
                         >
                             <Menu size={22} />
                         </button>
-                        <h1 className="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                            <span className="text-neon-green">/</span>
-                            {getPageTitle()}
-                        </h1>
+                        <div>
+                            <h1 className="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                                <span className="text-neon-green">/</span>
+                                {getPageTitle()}
+                            </h1>
+                            {getPageSubtitle() && (
+                                <p className="text-[11px] font-mono text-foreground/40 mt-0.5 hidden sm:block">
+                                    {getPageSubtitle()}
+                                </p>
+                            )}
+                        </div>
                     </div>
 
                     <div className="flex items-center gap-4">
-                        {/* Reserved for future actions */}
+                        <Link
+                            to="/"
+                            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-foreground/40 hover:text-neon-green hover:bg-neon-green/5 transition-all text-xs font-mono border border-transparent hover:border-neon-green/20"
+                        >
+                            <Home size={13} />
+                            Home
+                        </Link>
                     </div>
                 </header>
 

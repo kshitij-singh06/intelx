@@ -85,9 +85,10 @@ export default function DocsLayout() {
             {/* Mobile Sidebar Toggle */}
             <button
                 onClick={() => setSidebarOpen(true)}
-                className="lg:hidden fixed top-4 right-4 z-50 p-2 bg-black/50 border border-white/10 rounded-lg text-white"
+                className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-[#0a0e17]/90 backdrop-blur-sm border border-white/10 rounded-lg text-white hover:border-neon-green/30 transition-colors"
+                aria-label="Open navigation"
             >
-                <Menu size={24} />
+                <Menu size={22} />
             </button>
             {sidebarOpen && (
                 <div className="fixed inset-0 z-30 bg-black/80 lg:hidden" onClick={() => setSidebarOpen(false)} />

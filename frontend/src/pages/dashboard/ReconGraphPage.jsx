@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
     Radar, Search, Globe, Shield, MapPin, Server, Users, Mail, Phone,
@@ -6,6 +6,7 @@ import {
     Eye, EyeOff, Activity, Wifi, Lock, Unlock, ExternalLink
 } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
+import ApiStatusBadge from '../../components/ui/ApiStatusBadge'
 
 
 const API_BASE = '/api/Recon-Analyzer'
@@ -80,15 +81,6 @@ export default function ReconGraphPage() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const [results, setResults] = useState(null)
-    const [healthStatus, setHealthStatus] = useState(null)
-
-    // Health check on mount
-    useEffect(() => {
-        fetch(`${API_BASE}/health`)
-            .then(res => res.json())
-            .then(data => setHealthStatus(data.status))
-            .catch(() => setHealthStatus('unhealthy'))
-    }, [])
 
     const handleThreatScan = async () => {
         if (!query.trim()) return
@@ -165,15 +157,7 @@ export default function ReconGraphPage() {
                         <p className="text-foreground/60 text-sm">OSINT & Threat Intelligence</p>
                     </div>
                 </div>
-                {healthStatus && (
-                    <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono ${healthStatus === 'healthy'
-                        ? 'bg-green-500/10 text-green-400 border border-green-500/30'
-                        : 'bg-red-500/10 text-red-400 border border-red-500/30'
-                        }`}>
-                        <div className={`w-2 h-2 rounded-full ${healthStatus === 'healthy' ? 'bg-green-400' : 'bg-red-400'} animate-pulse`} />
-                        {healthStatus === 'healthy' ? 'System Online' : 'System Offline'}
-                    </div>
-                )}
+                <ApiStatusBadge serviceId="recon" />
             </div>
 
             {/* Mode Toggle */}

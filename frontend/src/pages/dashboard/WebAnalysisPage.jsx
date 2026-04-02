@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, Globe, Shield, ShieldAlert, Activity, List, Server, TriangleAlert, CheckCircle, Clock, MapPin, Lock, FileText, Share2, Info, ChevronDown, ChevronUp, AlertCircle, Wifi, Mail, Link2, Cookie, ExternalLink } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
+import ApiStatusBadge from '../../components/ui/ApiStatusBadge'
 
 const API_BASE = '/api/web-analyzer'
 // API endpoint configuration
@@ -161,10 +162,7 @@ export default function WebAnalysisPage() {
                         <div className="text-xs text-foreground/40 font-mono mt-1">ADVANCED INTELLIGENCE SCANNER</div>
                     </div>
                 </div>
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/20">
-                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-xs font-mono text-green-500">API ONLINE</span>
-                </div>
+                <ApiStatusBadge serviceId="web" />
             </div>
 
             {/* Input Bar */}

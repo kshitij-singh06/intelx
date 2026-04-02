@@ -27,7 +27,13 @@ export default defineConfig({
       '/api/malware-analyzer': {
         target: 'http://localhost:5000',
         changeOrigin: true,
-      }
+      },
+      // Health-check-only routes
+      '/health/url-analyzer': {
+        target: 'http://localhost:5004',
+        changeOrigin: true,
+        rewrite: () => '/health',
+      },
     }
   }
 })

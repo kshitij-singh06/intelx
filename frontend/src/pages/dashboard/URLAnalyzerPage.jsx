@@ -9,6 +9,7 @@ import {
     ArrowDownRight, Info, Sparkles, X
 } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
+import ApiStatusBadge from '../../components/ui/ApiStatusBadge'
 
 
 const API_BASE = '/api/url-analyzer'
@@ -326,10 +327,7 @@ export default function URLAnalyzerPage() {
                         <p className="text-foreground/60 text-sm">Trace redirects & assess link safety</p>
                     </div>
                 </div>
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/20">
-                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-xs font-mono text-green-500">API ONLINE</span>
-                </div>
+                <ApiStatusBadge serviceId="url" />
             </div>
 
             {/* Input Panel */}

@@ -4,10 +4,12 @@ import { ToolsOverviewSection } from '../components/sections/ToolsOverviewSectio
 import { FeaturesHighlightSection } from '../components/sections/FeaturesHighlightSection'
 import { OpenSourceSection } from '../components/sections/OpenSourceSection'
 import { CTASection } from '../components/sections/CTASection'
+import { LandingNavbar } from '../components/ui/LandingNavbar'
 
 export default function LandingPage() {
     return (
         <>
+            <LandingNavbar />
             <HeroSection />
             <IntroductionSection />
             <ToolsOverviewSection />

@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Upload, FileImage, ShieldAlert, ImageIcon, Terminal, Activity, Eye, Download, AlertTriangle, CheckCircle, XCircle, ChevronDown, ChevronUp, Lock, Loader2 } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
+import ApiStatusBadge from '../../components/ui/ApiStatusBadge'
 
 const API_BASE = '/api/steg-analyzer'
 const TerminalLine = ({ text, delay = 0, color = 'text-foreground/70' }) => (
@@ -337,13 +338,8 @@ export default function StegAnalysisPage() {
                     <p className="text-foreground/60">Steganography Detection & Analysis</p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
-                    <div className="px-3 py-1 rounded bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-mono flex items-center gap-2">
-                        <ImageIcon size={14} /> HIDDEN DATA DETECTION
-                    </div>
-                    <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20">
-                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                        <span className="text-xs font-mono text-green-500">API ONLINE</span>
-                    </div>
+
+                    <ApiStatusBadge serviceId="steg" />
                 </div>
             </div>
 

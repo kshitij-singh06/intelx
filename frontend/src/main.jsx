@@ -21,6 +21,7 @@ import MalwareDocs from './pages/docs/MalwareDocs'
 import StegDocs from './pages/docs/StegDocs'
 import ReconDocs from './pages/docs/ReconDocs'
 import URLDocs from './pages/docs/URLDocs'
+import NotFoundPage from './pages/NotFoundPage'
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>
@@ -36,7 +37,6 @@ createRoot(document.getElementById('root')).render(
                     <Route path="steg" element={<StegAnalysisPage />} />
                     <Route path="recon" element={<ReconGraphPage />} />
                     <Route path="url" element={<URLAnalyzerPage />} />
-                    <Route path="settings" element={<div className="text-white p-8">Settings Panel (Placeholder)</div>} />
                 </Route>
 
                 {/* Documentation Routes */}
@@ -48,6 +48,9 @@ createRoot(document.getElementById('root')).render(
                     <Route path="recon-analysis" element={<ReconDocs />} />
                     <Route path="url-analyzer" element={<URLDocs />} />
                 </Route>
+
+                {/* 404 Catch-all */}
+                <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </BrowserRouter>
     </StrictMode>,

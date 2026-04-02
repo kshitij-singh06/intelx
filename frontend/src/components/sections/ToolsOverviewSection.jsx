@@ -21,7 +21,8 @@ const tools = [
         ],
         gradient: 'from-neon-green/20 via-neon-green/5 to-transparent',
         accent: 'neon-green',
-        link: '/docs/web-analyzer'
+        link: '/docs/web-analyzer',
+        dashboardLink: '/dashboard/web',
     },
     {
         icon: Bug,
@@ -38,7 +39,8 @@ const tools = [
         ],
         gradient: 'from-red-500/20 via-red-500/5 to-transparent',
         accent: 'red-400',
-        link: '/docs/malware-analysis'
+        link: '/docs/malware-analysis',
+        dashboardLink: '/dashboard/malware',
     },
     {
         icon: Radar,
@@ -54,7 +56,8 @@ const tools = [
         ],
         gradient: 'from-neon-yellow/20 via-neon-yellow/5 to-transparent',
         accent: 'neon-yellow',
-        link: '/docs/recon-analysis'
+        link: '/docs/recon-analysis',
+        dashboardLink: '/dashboard/recon',
     },
     {
         icon: Eye,
@@ -70,7 +73,8 @@ const tools = [
         ],
         gradient: 'from-purple-500/20 via-purple-500/5 to-transparent',
         accent: 'purple-400',
-        link: '/docs/steg-analysis'
+        link: '/docs/steg-analysis',
+        dashboardLink: '/dashboard/steg',
     },
     {
         icon: Link2,
@@ -86,7 +90,8 @@ const tools = [
         ],
         gradient: 'from-blue-500/20 via-blue-500/5 to-transparent',
         accent: 'blue-400',
-        link: '/docs/url-analyzer'
+        link: '/docs/url-analyzer',
+        dashboardLink: '/dashboard/url',
     },
 ]
 
@@ -233,17 +238,31 @@ export function ToolsOverviewSection() {
                                         ))}
                                     </div>
 
-                                    {/* CTA */}
-                                    <Link to={tool.link}>
-                                        <motion.button
-                                            className={`mt-auto flex items-center gap-2 text-${tool.accent} font-mono text-sm group/btn`}
-                                            style={{ color: index === 1 ? '#f87171' : undefined }}
-                                            whileHover={{ x: 4 }}
-                                        >
-                                            Learn More
-                                            <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
-                                        </motion.button>
-                                    </Link>
+                                    {/* CTA row: Docs + Try Now */}
+                                    <div className="mt-auto flex items-center justify-between gap-3">
+                                        <Link to={tool.link}>
+                                            <motion.button
+                                                className={`flex items-center gap-1.5 text-${tool.accent} font-mono text-sm group/btn`}
+                                                style={{ color: index === 1 ? '#f87171' : undefined }}
+                                                whileHover={{ x: 3 }}
+                                            >
+                                                Docs
+                                                <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
+                                            </motion.button>
+                                        </Link>
+                                        <Link to={tool.dashboardLink}>
+                                            <motion.button
+                                                whileHover={{ scale: 1.06 }}
+                                                whileTap={{ scale: 0.95 }}
+                                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold
+                                                    bg-${tool.accent}/10 border border-${tool.accent}/30
+                                                    text-${tool.accent} hover:bg-${tool.accent}/20 transition-colors`}
+                                                style={{ color: index === 1 ? '#f87171' : undefined }}
+                                            >
+                                                Try Now →
+                                            </motion.button>
+                                        </Link>
+                                    </div>
                                 </div>
 
                                 {/* Animated border */}
