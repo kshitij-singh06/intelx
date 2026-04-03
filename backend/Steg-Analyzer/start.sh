@@ -9,5 +9,5 @@ echo "Starting RQ worker..."
 rq worker default --url ${REDIS_URL:-redis://redis:6379/0} &
 
 # Start the web server (Gunicorn is recommended for production over flask run)
-echo "Starting Gunicorn server..."
-exec gunicorn -w 8 -b 0.0.0.0:${PORT:-5000} --access-logfile - --error-logfile - --log-level info --capture-output intelx.utils.wsgi:application
+echo "Starting Gunicorn server on port 5000..."
+exec gunicorn -w 8 -b 0.0.0.0:5000 --access-logfile - --error-logfile - --log-level info --capture-output intelx.utils.wsgi:application
