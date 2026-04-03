@@ -78,5 +78,9 @@ COPY --from=builder /usr/local/bin/jphide /usr/local/bin/jphide
 COPY --from=builder /usr/local/bin/jpseek /usr/local/bin/jpseek
 COPY --from=builder /usr/local/bin/jsteg /usr/local/bin/jsteg
 
+# Copy start script
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
 # Commande de lancement
-CMD ["gunicorn", "-w", "8", "-b", "0.0.0.0:5000", "--access-logfile", "-", "--error-logfile", "-", "--log-level", "info", "--capture-output", "intelx.utils.wsgi:application"]
+CMD ["/app/start.sh"]
