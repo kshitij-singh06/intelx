@@ -10,7 +10,7 @@ export default defineConfig({
       '/api/web-analyzer': {
         // Toggle :
         // target: 'http://localhost:5001',
-        target: 'https://web-analyzer-production-692b.up.railway.app',
+        target: 'https://intelx-web-analyzer.onrender.com',
         changeOrigin: true,
         secure: false,
       },

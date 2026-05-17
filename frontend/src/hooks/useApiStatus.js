@@ -6,35 +6,46 @@
  */
 import { useState, useEffect } from 'react'
 
+// Determine if we're in production
+const isProduction = import.meta.env.MODE === 'production' && typeof window !== 'undefined'
+
+// Helper function to get API URL (absolute in production, relative in dev)
+function getApiUrl(path, envVar) {
+    if (isProduction && import.meta.env[envVar]) {
+        return import.meta.env[envVar] + path
+    }
+    return path // Use relative URL for dev (proxy handles it)
+}
+
 export const SERVICES = [
     {
         id: 'web',
         label: 'Web API',
-        url: '/api/web-analyzer/',
+        url: getApiUrl('/api/web-analyzer/', 'VITE_WEB_ANALYZER_URL'),
         ok: (res) => res.ok,
     },
     {
         id: 'malware',
         label: 'Malware API',
-        url: '/api/malware-analyzer/health',
+        url: getApiUrl('/api/malware-analyzer/health', 'VITE_MALWARE_ANALYZER_URL'),
         ok: (res) => res.ok,
     },
     {
         id: 'steg',
         label: 'Steg API',
-        url: '/api/steg-analyzer/',
+        url: getApiUrl('/api/steg-analyzer/', 'VITE_STEG_ANALYZER_URL'),
         ok: (res) => res.ok,
     },
     {
         id: 'recon',
         label: 'Recon API',
-        url: '/api/Recon-Analyzer/health',
+        url: getApiUrl('/api/Recon-Analyzer/health', 'VITE_RECON_ANALYZER_URL'),
         ok: (res) => res.ok,
     },
     {
         id: 'url',
         label: 'URL API',
-        url: '/health/url-analyzer',  // proxied by vite to localhost:5004/health
+        url: getApiUrl('/api/url-analyzer/', 'VITE_URL_ANALYZER_URL'),  // In dev: proxied by vite
         ok: (res) => res.ok,
     },
 ]
