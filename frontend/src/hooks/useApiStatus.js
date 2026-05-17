@@ -1,20 +1,19 @@
 /**
- * useApiStatus — checks all 5 IntelX backend services via the Vite proxy.
- *
- * All URLs are relative (no host/port), exactly like the tool pages, so this
- * works in both dev (Vite proxy) and production (same-origin reverse proxy).
+ * useApiStatus — checks all 5 IntelX backend services
+ * Uses absolute URLs from environment variables in production
+ * Uses relative URLs via Vite proxy in development
  */
 import { useState, useEffect } from 'react'
 
-// Determine if we're in production
-const isProduction = import.meta.env.MODE === 'production' && typeof window !== 'undefined'
-
-// Helper function to get API URL (absolute in production, relative in dev)
+// Helper function to get API URL (absolute if env var exists, else relative)
 function getApiUrl(path, envVar) {
-    if (isProduction && import.meta.env[envVar]) {
-        return import.meta.env[envVar] + path
+    // In production (Vercel), environment variable will be set
+    const baseUrl = import.meta.env[envVar]
+    if (baseUrl) {
+        return baseUrl + path
     }
-    return path // Use relative URL for dev (proxy handles it)
+    // In development, use relative URL (Vite proxy will handle it)
+    return path
 }
 
 export const SERVICES = [
@@ -45,7 +44,7 @@ export const SERVICES = [
     {
         id: 'url',
         label: 'URL API',
-        url: getApiUrl('/api/url-analyzer/', 'VITE_URL_ANALYZER_URL'),  // In dev: proxied by vite
+        url: getApiUrl('/api/url-analyzer/', 'VITE_URL_ANALYZER_URL'),
         ok: (res) => res.ok,
     },
 ]
