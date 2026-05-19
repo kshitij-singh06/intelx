@@ -2,9 +2,9 @@
   "rewrites": [
     { "source": "/api/malware-analyzer/:path*", "destination": "http://3.108.12.155:5000/api/malware-analyzer/:path*" },
     { "source": "/api/web-analyzer/:path*", "destination": "https://intelx-web-analyzer.onrender.com/api/web-analyzer/:path*" },
-    { "source": "/api/steg-analyzer/:path*", "destination": "https://intelx-steg-analyzer.onrender.com/api/steg-analyzer/:path*" },
-    { "source": "/api/Recon-Analyzer/:path*", "destination": "https://your-recon-analyzer.onrender.com/api/Recon-Analyzer/:path*" },
-    { "source": "/api/url-analyzer/:path*", "destination": "https://intelx-url-analyzer.onrender.com/api/url-analyzer/:path*" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/api/steg-analyzer/:path*", "destination": "https://intelx-steg.onrender.com/api/steg-analyzer/:path*" },
+    { "source": "/api/Recon-Analyzer/:path*", "destination": "https://intelx-recon.onrender.com/api/Recon-Analyzer/:path*" },
+    { "source": "/api/url-analyzer/:path*", "destination": "https://intelx-url.onrender.com/api/url-analyzer/:path*" },
+    { "source": "/(.*)", "destination": "/index.html" } 
   ]
 }
