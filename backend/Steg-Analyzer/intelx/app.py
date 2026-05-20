@@ -63,6 +63,11 @@ def create_app() -> Flask:
         """Root endpoint."""
         return jsonify({"message": "IntelX Steg-Analyzer Backend is running"}), 200
 
+    @bp.route("/health", methods=["GET"])
+    def health() -> tuple[Response, int]:
+        """Health check endpoint."""
+        return jsonify({"status": "healthy", "service": "steg-analyzer"}), 200
+
     @bp.route("/upload", methods=["POST"])
     def upload_image() -> tuple[Response, int]:
         """Handle image upload and initiate analysis."""

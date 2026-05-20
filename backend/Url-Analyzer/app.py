@@ -25,9 +25,10 @@ ai_analyzer = AIAnalyzer()
 
 
 @app.route('/health', methods=['GET'])
+@app.route('/api/url-analyzer/health', methods=['GET'])
 def health():
     """Health check endpoint"""
-    return jsonify({'status': 'ok', 'timestamp': datetime.now().isoformat()}), 200
+    return jsonify({'status': 'healthy', 'service': 'url-analyzer', 'timestamp': datetime.now().isoformat()}), 200
 
 
 @app.route('/api/url-analyzer/analyze', methods=['POST'])
