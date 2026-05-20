@@ -16,6 +16,7 @@ import sentry_sdk
 from flask import Blueprint, Flask, Response, abort, jsonify, request, send_file
 from flask_cors import CORS
 from redis import Redis
+from redis.exceptions import RedisError
 from rq import Queue
 
 
@@ -170,9 +171,17 @@ def create_app() -> Flask:
         db.session.commit()  # pylint: disable=no-member
 
         # Start the analysis jobs
-        app.config["REDIS_QUEUE"].enqueue(
-            "intelx.workers.analyze_image", submission.hash, job_timeout=300
-        )
+        try:
+            app.config["REDIS_QUEUE"].enqueue(
+                "intelx.workers.analyze_image", submission.hash, job_timeout=300
+            )
+        except RedisError as exc:
+            # Avoid 500s when Redis is missing/unreachable (common on free tier)
+            print(f"Queue unavailable: {exc}")
+            return (
+                jsonify({"error": "Queue unavailable. Configure REDIS_URL or enable worker."}),
+                503,
+            )
 
         # Return submission identifier
         return jsonify({"submission_hash": submission.hash}), 200
